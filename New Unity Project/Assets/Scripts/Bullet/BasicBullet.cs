@@ -56,7 +56,7 @@ public class BasicBullet : MonoBehaviour
 
                  vPos.x = (_radius) * (float)Mathf.Cos(Mathf.Deg2Rad * _angle);
                  vPos.y = (_radius) * (float)Mathf.Sin(Mathf.Deg2Rad * _angle);
-                 vPos.z = -2f;
+                 vPos.z = 0f;
 
                  transform.localPosition = vPos;
              });

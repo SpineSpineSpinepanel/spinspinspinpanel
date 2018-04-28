@@ -27,15 +27,23 @@ public class Player : MonoBehaviour {
 
         vPos.x = 0f + (fRadius * (float)Mathf.Cos(_fAngle * Mathf.PI));
         vPos.y = 0f + (fRadius * (float)Mathf.Sin(_fAngle * Mathf.PI));
-        vPos.z = -1f;
+        vPos.z = 0f;
 
         transform.localPosition = vPos;
         transform.localEulerAngles = new Vector3(0f, 0f, (_fAngle * Mathf.PI) * (180 / Mathf.PI));
     }
 
-    void OnTriggerEnter2D(Collider2D coll)
+    //void OnTriggerEnter2D(Collider2D coll)
+    //{
+    //    if (coll.tag.Equals("Ball"))
+    //    {
+    //        Debug.Log("Die");
+    //    }
+    //}
+
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if(coll.tag.Equals("Ball"))
+        if (collision.tag.Equals("Ball"))
         {
             Debug.Log("Die");
         }
