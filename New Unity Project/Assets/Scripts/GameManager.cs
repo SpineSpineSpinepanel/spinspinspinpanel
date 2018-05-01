@@ -23,6 +23,26 @@ public class GameManager : MonoBehaviour
     public int CurrentPatternTotalBallNumber = 0;
     private int _currentPatternBallCnt = 0;
     private int _levelCnt = 0;
+
+    public float CurrentPatternTotalTime = 0f;
+    private float _currentPatternTimeCount = 0f;
+    private bool _isPattern = false;
+
+    public float CurrentPatternTimeCount
+    {
+        get
+        {
+            return _currentPatternTimeCount;
+        }
+
+        set
+        {
+            _currentPatternTimeCount = value;
+        }
+    }
+
+
+
     // Use this for initialization
     void Start()
     {
@@ -32,18 +52,38 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(_isPattern)
+            _currentPatternTimeCount += Time.deltaTime;
     }
 
     public void SetLevelProgeress()
     {
-        sprCircleBg.fillAmount = (float)_currentPatternBallCnt / (float)CurrentPatternTotalBallNumber;
-        _currentPatternBallCnt++;
-        Debug.Log("1 : " + _currentPatternBallCnt);
+        Debug.Log(_currentPatternTimeCount + " , " + CurrentPatternTotalTime);
+        if (_currentPatternTimeCount >= CurrentPatternTotalTime)
+        {
+            _isPattern = false;
+            _currentPatternTimeCount = CurrentPatternTotalTime;
+        }
+
+        sprCircleBg.fillAmount = (float)_currentPatternTimeCount / (float)CurrentPatternTotalTime;
     }
 
     public void SetBallCnt()
     {
         _currentPatternBallCnt = 0;
+    }
+
+    public void InitPatternStart(float TotalTime)
+    {
+        _currentPatternTimeCount = 0f;
+        CurrentPatternTotalTime = TotalTime;
+        _isPattern = true;
+    }
+
+    public void InitPatternStart(int TotalCnt)
+    {
+        _currentPatternBallCnt = 0;
+        CurrentPatternTotalBallNumber = TotalCnt;
+        _isPattern = true;
     }
 }
