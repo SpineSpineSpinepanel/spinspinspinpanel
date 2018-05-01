@@ -19,12 +19,10 @@ public class GameManager : MonoBehaviour
 
     public UISprite sprCircleBg;
 
-<<<<<<< HEAD
     public GameObject endFXPrefab = null;
-=======
+
     public int MaxLevel = 3;
 
->>>>>>> 5e62103f3f3d6b83b84e788722f617193181f055
 
     public int CurrentPatternTotalBallNumber = 0;
     private int _currentPatternBallCnt = 0;
