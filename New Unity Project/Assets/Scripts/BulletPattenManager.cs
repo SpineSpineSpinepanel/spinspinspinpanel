@@ -9,6 +9,8 @@ public class BulletPattenManager : MonoBehaviour
 
     public AnimationCurve curve_Angle;
     public AnimationCurve curve_Angle02;
+
+    private float _patternTimeCount = 0f;
     // Use this for initialization
     void Start()
     {
@@ -18,36 +20,13 @@ public class BulletPattenManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            IPattern patten = new Pattern01(15, 10f, 1.5f, 180f, curve_Angle);
-            patten.OnStart();
-            CurPattern = patten;
-            GameManager.GetInstance().InitPatternStart(11.5f);
-        }
+        _patternTimeCount += Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.S))
+        if (_patternTimeCount >= GameManager.GetInstance().CurrentPatternTotalTime)
         {
-            IPattern patten = new Pattern02(6, 10f, 1.5f, 360f, curve_Angle02);
-            patten.OnStart();
-            CurPattern = patten;
-            GameManager.GetInstance().InitPatternStart(11.5f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            IPattern patten = new Pattern03(300, 10f, 0.05f);
-            patten.OnStart();
-            CurPattern = patten;
-            GameManager.GetInstance().InitPatternStart(10f);
-        }
-
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            IPattern patten = new Pattern04(15, 10f, 1.5f, 180f, curve_Angle);
-            patten.OnStart();
-            CurPattern = patten;
-            GameManager.GetInstance().InitPatternStart(11.5f);
+            SetPattern(Random.Range(0, 4));
+            _patternTimeCount = 0f;
+            GameManager.GetInstance().LevelCnt++;
         }
 
         if (CurPattern != null)
@@ -63,7 +42,46 @@ public class BulletPattenManager : MonoBehaviour
                 //GameManager.GetInstance().SetBallCnt();
             }
         }
+    }
 
+    public void SetPattern(int pattern)
+    {
+        if(pattern == 0)
+        {
+            IPattern patten = new Pattern01(15, 10f, 1.5f, 180f, curve_Angle);
+            patten.OnStart();
+            CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
+        }
+
+        if (pattern == 1)
+        {
+            IPattern patten = new Pattern02(6, 10f, 1.5f, 360f, curve_Angle02);
+            patten.OnStart();
+            CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
+        }
+
+        if (pattern == 2)
+        {
+            //IPattern patten = new Pattern03(300, 10f, 0.05f);
+            //patten.OnStart();
+            //CurPattern = patten;
+            //GameManager.GetInstance().InitPatternStart(300);
+
+            IPattern patten = new Pattern04(15, 10f, 1.5f, 180f, curve_Angle);
+            patten.OnStart();
+            CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
+        }
+
+        if (pattern == 3)
+        {
+            IPattern patten = new Pattern04(15, 10f, 1.5f, 180f, curve_Angle);
+            patten.OnStart();
+            CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
+        }
     }
 
     public int GetCurrentPatternBallCnt()

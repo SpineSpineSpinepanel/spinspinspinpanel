@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        //transform.DORotate(new Vector3(0f, 0f, 360f), SpinSpeed).SetLoops(-1).SetRelative().SetEase(Ease.Linear);
+        transform.DORotate(new Vector3(0f, 0f, 360f), SpinSpeed).SetLoops(-1).SetRelative().SetEase(Ease.Linear);
     }
 
     // Update is called once per frame
@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
         vPos.z = 0f;
 
         transform.localPosition = vPos;
-        transform.localEulerAngles = new Vector3(0f, 0f, (_fAngle * Mathf.PI) * (180 / Mathf.PI));
+        //transform.localEulerAngles = new Vector3(0f, 0f, (_fAngle * Mathf.PI) * (180 / Mathf.PI));
     }
 
     //void OnTriggerEnter2D(Collider2D coll)
