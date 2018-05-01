@@ -5,6 +5,8 @@ using DG.Tweening;
 
 public class BasicBullet : MonoBehaviour
 {
+    [SerializeField]
+    private ParticleSystem _endFX = null;
 
     private bool _isMoveing;
     private bool _isMoveFalg = false;
@@ -28,6 +30,7 @@ public class BasicBullet : MonoBehaviour
             _isMoveing = value;
         }
     }
+
     // startangle : 시작 각도, startradius : 시작 반지름, MoveTime : 움직이는 시간
     public void OnActive(float StartAngle, float StartRadius, float MoveTime)
     {
@@ -38,24 +41,27 @@ public class BasicBullet : MonoBehaviour
         _radiusMoveTime = MoveTime;
         _isMoveFalg = true;
 
+        //Temporal.
+        transform.localScale = new Vector3(.5f, .5f, 1f);
 
-        DOTween.To(() => _radius, x => _radius = x, 0f, _radiusMoveTime).SetEase(Ease.Linear).OnComplete(
-             () =>
+        DOTween.To(() => _radius, x => _radius = x, 0f, _radiusMoveTime).SetEase(Ease.Linear).OnComplete(() =>
              {
                  _isMoveing = false;
 
                  gameObject.SetActive(false);
                  _radius = 10000f;
 
+                 GameManager.GetInstance().PlayBulletEndFX();
                  GameManager.GetInstance().SetLevelProgeress();
 
 
-             }).OnUpdate(() => {
+             }).OnUpdate(() =>
+             {
                  Vector3 vPos = Vector3.zero;
 
 
-                 vPos.x = (_radius) * (float)Mathf.Cos(Mathf.Deg2Rad * _angle);
-                 vPos.y = (_radius) * (float)Mathf.Sin(Mathf.Deg2Rad * _angle);
+                 vPos.x = (_radius) * (float) Mathf.Cos(Mathf.Deg2Rad * _angle);
+                 vPos.y = (_radius) * (float) Mathf.Sin(Mathf.Deg2Rad * _angle);
                  vPos.z = 0f;
 
                  transform.localPosition = vPos;
@@ -79,7 +85,8 @@ public class BasicBullet : MonoBehaviour
 
     public void OnUpdate()
     {
-        if (!gameObject.activeSelf) return;
+        if (!gameObject.activeSelf)
+            return;
 
         if (_isMoveFalg)
         {
@@ -89,11 +96,12 @@ public class BasicBullet : MonoBehaviour
                 () =>
                 {
                     _isMoveing = false;
-                }).OnUpdate(()=> {
+                }).OnUpdate(() =>
+                {
                     Vector3 vPos = Vector3.zero;
 
-                    vPos.x = (_radius) * (float)Mathf.Cos(Mathf.Deg2Rad * _angle);
-                    vPos.y = (_radius) * (float)Mathf.Sin(Mathf.Deg2Rad * _angle);
+                    vPos.x = (_radius) * (float) Mathf.Cos(Mathf.Deg2Rad * _angle);
+                    vPos.y = (_radius) * (float) Mathf.Sin(Mathf.Deg2Rad * _angle);
                     vPos.z = -2f;
 
                     transform.localPosition = vPos;
@@ -108,6 +116,5 @@ public class BasicBullet : MonoBehaviour
                 _radius = 10000f;
             }
         }
-
     }
 }

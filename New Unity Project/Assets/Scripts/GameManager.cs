@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     public UISprite sprCircleBg;
 
+    public GameObject endFXPrefab = null;
 
     public int CurrentPatternTotalBallNumber = 0;
     private int _currentPatternBallCnt = 0;
@@ -85,5 +86,22 @@ public class GameManager : MonoBehaviour
         _currentPatternBallCnt = 0;
         CurrentPatternTotalBallNumber = TotalCnt;
         _isPattern = true;
+    }
+
+    public void PlayBulletEndFX()
+    {
+        StartCoroutine(BulletEndFX());
+    }
+
+    private IEnumerator BulletEndFX()
+    {
+        var endFXObject = Instantiate(endFXPrefab, transform.parent);
+        var particle = endFXObject.GetComponent<ParticleSystem>();
+
+        particle.Play();
+
+        yield return new WaitForSeconds(particle.main.duration);
+
+        Destroy(endFXObject);
     }
 }
