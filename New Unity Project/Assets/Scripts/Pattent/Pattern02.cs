@@ -91,7 +91,7 @@ public class Pattern02 : IPattern
         _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle + _animationAngle, _animationTime).SetEase(_curve_Angle).OnComplete(
             () =>
             {
-                infolist.Remove(infolist[index]);
+                //infolist.Remove(infolist[index]);
             }));
     }
 
@@ -110,7 +110,7 @@ public class Pattern02 : IPattern
 
     public int GetTotalBallCount()
     {
-        int cnt = (int)((_animationTime / 0.1f * _waveCount) - _waveCount);
+        int cnt = (int)((_animationTime / 0.1f * _waveCount) /*- _waveCount*/);
 
         return cnt;
     }

@@ -23,6 +23,7 @@ public class BulletPattenManager : MonoBehaviour
             IPattern patten = new Pattern01(15, 10f, 1.5f, 180f, curve_Angle);
             patten.OnStart();
             CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
         }
 
         if (Input.GetKeyDown(KeyCode.S))
@@ -30,6 +31,7 @@ public class BulletPattenManager : MonoBehaviour
             IPattern patten = new Pattern02(6, 10f, 1.5f, 360f, curve_Angle02);
             patten.OnStart();
             CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
         }
 
         if (Input.GetKeyDown(KeyCode.D))
@@ -37,6 +39,7 @@ public class BulletPattenManager : MonoBehaviour
             IPattern patten = new Pattern03(300, 10f, 0.05f);
             patten.OnStart();
             CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(10f);
         }
 
         if(Input.GetKeyDown(KeyCode.F))
@@ -44,6 +47,7 @@ public class BulletPattenManager : MonoBehaviour
             IPattern patten = new Pattern04(15, 10f, 1.5f, 180f, curve_Angle);
             patten.OnStart();
             CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
         }
 
         if (CurPattern != null)
@@ -52,7 +56,6 @@ public class BulletPattenManager : MonoBehaviour
             if (CurPattern.IsTweening())
             {
                 CurPattern.OnUpdate(Time.smoothDeltaTime);
-                GameManager.GetInstance().CurrentPatternTotalBallNumber = CurPattern.GetTotalBallCount();
             }
             else
             {
