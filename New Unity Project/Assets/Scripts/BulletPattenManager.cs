@@ -5,6 +5,19 @@ using DG.Tweening;
 
 public class BulletPattenManager : MonoBehaviour
 {
+    private static BulletPattenManager instance;
+    public static BulletPattenManager GetInstance()
+    {
+        if (!instance)
+        {
+            instance = GameObject.FindObjectOfType(typeof(BulletPattenManager)) as BulletPattenManager;
+            if (!instance)
+                Debug.LogError("There needs to be one active MyClass script on a GameObject in your scene.");
+        }
+
+        return instance;
+    }
+
     IPattern CurPattern;
 
     public AnimationCurve curve_Angle;
@@ -15,6 +28,7 @@ public class BulletPattenManager : MonoBehaviour
     void Start()
     {
         DOTween.useSmoothDeltaTime = true;
+        CreateNewPattern();
     }
 
     // Update is called once per frame
@@ -22,12 +36,6 @@ public class BulletPattenManager : MonoBehaviour
     {
         _patternTimeCount += Time.deltaTime;
 
-        if (_patternTimeCount >= GameManager.GetInstance().CurrentPatternTotalTime)
-        {
-            SetPattern(Random.Range(0, 4));
-            _patternTimeCount = 0f;
-            GameManager.GetInstance().LevelCnt++;
-        }
 
         if (CurPattern != null)
         {
@@ -41,6 +49,17 @@ public class BulletPattenManager : MonoBehaviour
                 CurPattern.OnEnd();
                 //GameManager.GetInstance().SetBallCnt();
             }
+        }
+    }
+
+    public void CreateNewPattern()
+    {
+        if (BulletManager.GetInstance().CheckBullet())
+        {
+            SetPattern(Random.Range(0, 4));
+            _patternTimeCount = 0f;
+            GameManager.GetInstance().LevelCnt++;
+            Debug.Log(GameManager.GetInstance().LevelCnt);
         }
     }
 
@@ -64,15 +83,10 @@ public class BulletPattenManager : MonoBehaviour
 
         if (pattern == 2)
         {
-            //IPattern patten = new Pattern03(300, 10f, 0.05f);
-            //patten.OnStart();
-            //CurPattern = patten;
-            //GameManager.GetInstance().InitPatternStart(300);
-
-            IPattern patten = new Pattern04(15, 10f, 1.5f, 180f, curve_Angle);
+            IPattern patten = new Pattern03(300, 10f, 0.05f);
             patten.OnStart();
             CurPattern = patten;
-            GameManager.GetInstance().InitPatternStart(11.5f);
+            GameManager.GetInstance().InitPatternStart(300);
         }
 
         if (pattern == 3)

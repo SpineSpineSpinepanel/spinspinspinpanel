@@ -75,8 +75,6 @@ public class GameManager : MonoBehaviour
 
     public void SetLevelProgeress()
     {
-        Debug.Log(_currentPatternTimeCount + " , " + CurrentPatternTotalTime);
-
         if (_isTimeCheck)
         {
             if (_currentPatternTimeCount >= CurrentPatternTotalTime)
@@ -85,7 +83,7 @@ public class GameManager : MonoBehaviour
                 _currentPatternTimeCount = CurrentPatternTotalTime;
             }
 
-            sprCircleBg.fillAmount = ((float)_currentPatternTimeCount / (float)CurrentPatternTotalTime) * ((float)LevelCnt / (float)MaxLevel);
+            sprCircleBg.fillAmount = (((float)_currentPatternTimeCount / (float)CurrentPatternTotalTime) / (float)MaxLevel) + ((float)(LevelCnt - 1) / (float)MaxLevel);
         }
         else
         {
@@ -95,7 +93,7 @@ public class GameManager : MonoBehaviour
                 _currentPatternBallCnt = CurrentPatternTotalBallNumber;
             }
 
-            sprCircleBg.fillAmount = ((float)_currentPatternBallCnt / (float)CurrentPatternTotalBallNumber) * ((float)LevelCnt / (float)MaxLevel);
+            sprCircleBg.fillAmount = (((float)_currentPatternBallCnt / (float)CurrentPatternTotalBallNumber) / (float)MaxLevel) + ((float)(LevelCnt - 1) / (float)MaxLevel);
             _currentPatternBallCnt++;
         }
     }

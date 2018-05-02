@@ -48,7 +48,7 @@ public class BasicBullet : MonoBehaviour
                  _radius = 10000f;
 
                  GameManager.GetInstance().SetLevelProgeress();
-
+                 BulletPattenManager.GetInstance().CreateNewPattern();
 
              }).OnUpdate(() => {
                  Vector3 vPos = Vector3.zero;

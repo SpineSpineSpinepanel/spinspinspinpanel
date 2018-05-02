@@ -64,7 +64,6 @@ public class Pattern02 : IPattern
                 nBulletCnt++;
             }
         }
-        Debug.Log(nBulletCnt);
     }
 
     void CreateBullet(int i)

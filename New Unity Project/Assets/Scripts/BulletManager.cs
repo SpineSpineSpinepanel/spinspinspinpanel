@@ -79,4 +79,14 @@ public class BulletManager : MonoBehaviour
         return null;
 
     }
+
+    public bool CheckBullet()
+    {
+        for (int i = 0; i < BulletList.Count; ++i)
+        {
+            if (BulletList[i].gameObject.activeSelf)
+                return false;
+        }
+        return true;
+    }
 }
