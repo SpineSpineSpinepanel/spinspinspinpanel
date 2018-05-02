@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
 
     public UISprite sprCircleBg;
 
+    public GameObject endFXPrefab = null;
+
     public int MaxLevel = 3;
 
 
@@ -117,5 +119,22 @@ public class GameManager : MonoBehaviour
         CurrentPatternTotalBallNumber = TotalCnt;
         _isPattern = true;
         _isTimeCheck = false;
+    }
+
+    public void PlayBulletEndFX()
+    {
+        StartCoroutine(BulletEndFX());
+    }
+
+    private IEnumerator BulletEndFX()
+    {
+        var endFXObject = Instantiate(endFXPrefab, transform.parent);
+        var particle = endFXObject.GetComponent<ParticleSystem>();
+
+        particle.Play();
+
+        yield return new WaitForSeconds(particle.main.duration);
+
+        Destroy(endFXObject);
     }
 }
