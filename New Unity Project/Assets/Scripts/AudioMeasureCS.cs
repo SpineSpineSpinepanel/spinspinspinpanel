@@ -20,7 +20,7 @@ public class AudioMeasureCS : MonoBehaviour
     private float[] _spectrum;
     private float _fSample;
 
-    private float _visualModiFier = 0.1f;
+    private float _visualModiFier = 0.15f;
     private float _smoothSpeed = 1f;
     private float _visualScale = 0f;
 
@@ -47,7 +47,6 @@ public class AudioMeasureCS : MonoBehaviour
             spectrumIndex++;
         }
         float Scale = sum * _visualModiFier;
-        Debug.Log(Scale);
 
         _visualScale -= Time.smoothDeltaTime * _smoothSpeed;
 
@@ -59,21 +58,22 @@ public class AudioMeasureCS : MonoBehaviour
 
     void AnalyzeSound()
     {
-        audioSource.GetOutputData(_samples, 0); // fill array with samples
-        int i;
-        float sum = 0;
-        for (i = 0; i < QSamples; i++)
-        {
-            sum += _samples[i] * _samples[i]; // sum squared samples
-        }
-        RmsValue = Mathf.Sqrt(sum / QSamples); // rms = square root of average
-        DbValue = 20 * Mathf.Log10(RmsValue / RefValue); // calculate dB
-        if (DbValue < -160) DbValue = -160; // clamp it to -160dB min
-                                            // get sound spectrum
+        //audioSource.GetOutputData(_samples, 0); // fill array with samples
+        //int i;
+        //float sum = 0;
+        //for (i = 0; i < QSamples; i++)
+        //{
+        //    sum += _samples[i] * _samples[i]; // sum squared samples
+        //}
+        //RmsValue = Mathf.Sqrt(sum / QSamples); // rms = square root of average
+        //DbValue = 20 * Mathf.Log10(RmsValue / RefValue); // calculate dB
+        //if (DbValue < -160) DbValue = -160; // clamp it to -160dB min
+        //                                    // get sound spectrum
+
         audioSource.GetSpectrumData(_spectrum, 0, FFTWindow.BlackmanHarris);
         float maxV = 0;
         var maxN = 0;
-        for (i = 0; i < QSamples; i++)
+        for (int i = 0; i < QSamples; i++)
         { // find max 
             if (!(_spectrum[i] > maxV) || !(_spectrum[i] > Threshold))
                 continue;
