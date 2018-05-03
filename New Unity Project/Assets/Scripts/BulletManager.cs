@@ -77,7 +77,6 @@ public class BulletManager : MonoBehaviour
         }
 
         return null;
-
     }
 
     public bool CheckBullet()

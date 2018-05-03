@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject endFXPrefab = null;
 
+    private List<ParticleSystem> _listEndPop = new List<ParticleSystem>();
+
     public int MaxLevel = 3;
 
 
@@ -128,13 +130,52 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator BulletEndFX()
     {
-        var endFXObject = Instantiate(endFXPrefab, transform.parent);
-        var particle = endFXObject.GetComponent<ParticleSystem>();
+        ParticleSystem particle = GetEndPop();
 
         particle.Play();
 
         yield return new WaitForSeconds(particle.main.duration);
 
-        Destroy(endFXObject);
+        particle.gameObject.SetActive(false);
+    }
+
+    public void CreateEndPop()
+    {
+        for (int i = 0; i < 500; ++i)
+        {
+            GameObject obj = Instantiate(endFXPrefab);
+            _listEndPop.Add(obj.GetComponent<ParticleSystem>());
+
+            obj.name = "EndPop_" + i;
+            obj.transform.parent = BulletManager.GetInstance().transform;
+            obj.transform.localScale = new Vector3(95f, 95f, 1f);
+            obj.transform.localPosition = new Vector3(0f, 0f, 0f);
+            obj.gameObject.SetActive(false);
+        }
+    }
+
+    public ParticleSystem GetEndPop()
+    {
+        for (int i = 0; i < _listEndPop.Count; ++i)
+        {
+            if (!_listEndPop[i].gameObject.activeSelf)
+            {
+                _listEndPop[i].gameObject.SetActive(true);
+                return _listEndPop[i];
+            }
+        }
+
+        CreateEndPop();
+
+        for (int i = 0; i < _listEndPop.Count; ++i)
+        {
+            if (!_listEndPop[i].gameObject.activeSelf)
+            {
+                _listEndPop[i].gameObject.SetActive(true);
+                return _listEndPop[i];
+            }
+        }
+
+        return null;
     }
 }
