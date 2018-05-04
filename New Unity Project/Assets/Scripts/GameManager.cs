@@ -132,10 +132,24 @@ public class GameManager : MonoBehaviour
     private IEnumerator BulletEndFX()
     {
         ParticleSystem particle = GetEndPop();
+        particle.transform.localScale = new Vector3(95f, 95f, 1f);
 
         particle.Play();
 
-        yield return new WaitForSeconds(particle.main.duration);
+        //yield return new WaitForSeconds(particle.main.duration);
+        float elapsedTime = 0f;
+
+        while(true)
+        {
+            yield return new WaitForEndOfFrame();
+
+            if (elapsedTime >= particle.main.duration)
+                break;
+
+            elapsedTime += Time.deltaTime;
+
+            particle.transform.localScale = new Vector2 (95f * objCircleBg.transform.localScale.x, 95f * objCircleBg.transform.localScale.y) ;
+        }
 
         particle.gameObject.SetActive(false);
     }

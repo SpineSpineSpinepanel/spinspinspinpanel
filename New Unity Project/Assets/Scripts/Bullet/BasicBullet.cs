@@ -5,9 +5,6 @@ using DG.Tweening;
 
 public class BasicBullet : MonoBehaviour
 {
-    [SerializeField]
-    private ParticleSystem _endFX = null;
-
     private bool _isMoveing;
     private bool _isMoveFalg = false;
 
