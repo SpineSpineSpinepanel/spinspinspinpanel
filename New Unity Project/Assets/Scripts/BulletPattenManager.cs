@@ -59,8 +59,10 @@ public class BulletPattenManager : MonoBehaviour
         {
             int Pattern = Random.Range(0, 4);
 
-            while(Pattern != _prvePattern)
+            while (Pattern == _prvePattern)
+            {
                 Pattern = Random.Range(0, 4);
+            }
 
             SetPattern(Pattern);
             _prvePattern = Pattern;
