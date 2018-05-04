@@ -26,6 +26,7 @@ public class AudioMeasureCS : MonoBehaviour
 
     void Start()
     {
+        //audioSource.outputAudioMixerGroup.audioMixer.SetFloat("MasterVolume", -80f);
         _samples = new float[QSamples];
         _spectrum = new float[QSamples];
         _fSample = AudioSettings.outputSampleRate;

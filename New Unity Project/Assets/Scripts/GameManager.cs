@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     private List<ParticleSystem> _listEndPop = new List<ParticleSystem>();
 
     public int MaxLevel = 3;
-
+    public bool IsDie = false;
 
     public int CurrentPatternTotalBallNumber = 0;
     private int _currentPatternBallCnt = 0;

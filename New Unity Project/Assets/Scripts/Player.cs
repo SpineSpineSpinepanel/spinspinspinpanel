@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
 
 
     private float _fAngle = 0f;
+
+    public bool Isimmortal = false;
     // Use this for initialization
     void Start()
     {
@@ -20,6 +22,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.GetInstance().IsDie)
+            return;
+
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             _fAngle += Speed * Time.deltaTime;
@@ -49,10 +54,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("OnTriggerExit2D");
-        if (collision.tag.Equals("Ball"))
+        if (!Isimmortal && collision.tag.Equals("Ball"))
         {
-            Debug.Log("Die");
+            GameManager.GetInstance().IsDie = true;
         }
     }
 }

@@ -55,7 +55,7 @@ public class BulletPattenManager : MonoBehaviour
 
     public void CreateNewPattern()
     {
-        if (BulletManager.GetInstance().CheckBullet())
+        if (!GameManager.GetInstance().IsDie && BulletManager.GetInstance().CheckBullet())
         {
             int Pattern = Random.Range(0, 4);
 
