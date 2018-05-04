@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     }
 
     public UISprite sprCircleBg;
+    public GameObject objCircleBg;
 
     public GameObject endFXPrefab = null;
 

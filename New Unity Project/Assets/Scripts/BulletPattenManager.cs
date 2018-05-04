@@ -24,6 +24,7 @@ public class BulletPattenManager : MonoBehaviour
     public AnimationCurve curve_Angle02;
 
     private float _patternTimeCount = 0f;
+    private int _prvePattern = -1;
     // Use this for initialization
     void Start()
     {
@@ -56,7 +57,13 @@ public class BulletPattenManager : MonoBehaviour
     {
         if (BulletManager.GetInstance().CheckBullet())
         {
-            SetPattern(Random.Range(0, 4));
+            int Pattern = Random.Range(0, 4);
+
+            while(Pattern != _prvePattern)
+                Pattern = Random.Range(0, 4);
+
+            SetPattern(Pattern);
+            _prvePattern = Pattern;
             _patternTimeCount = 0f;
             GameManager.GetInstance().LevelCnt++;
             Debug.Log(GameManager.GetInstance().LevelCnt);
