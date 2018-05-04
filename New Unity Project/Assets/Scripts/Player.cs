@@ -47,8 +47,9 @@ public class Player : MonoBehaviour
     //    }
     //}
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log("OnTriggerExit2D");
         if (collision.tag.Equals("Ball"))
         {
             Debug.Log("Die");
