@@ -31,8 +31,8 @@ public class Player : MonoBehaviour
 
         Vector3 vPos = Vector3.zero;
 
-        vPos.x = 0f + (Radius * (float)Mathf.Cos(_fAngle * Mathf.PI));
-        vPos.y = 0f + (Radius * (float)Mathf.Sin(_fAngle * Mathf.PI));
+        vPos.x = 0f + (Radius * (float) Mathf.Cos(_fAngle * Mathf.PI));
+        vPos.y = 0f + (Radius * (float) Mathf.Sin(_fAngle * Mathf.PI));
         vPos.z = 0f;
 
         transform.localPosition = vPos;
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
     //    }
     //}
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag.Equals("Ball"))
         {

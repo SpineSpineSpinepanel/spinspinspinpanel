@@ -148,7 +148,7 @@ public class GameManager : MonoBehaviour
 
             elapsedTime += Time.deltaTime;
 
-            particle.transform.localScale = new Vector2 (particle.transform.localScale.x * objCircleBg.transform.localScale.x, particle.transform.localScale.y * objCircleBg.transform.localScale.y) ;
+            particle.transform.localScale = new Vector2 (95f * objCircleBg.transform.localScale.x, 95f * objCircleBg.transform.localScale.y) ;
         }
 
         particle.gameObject.SetActive(false);
