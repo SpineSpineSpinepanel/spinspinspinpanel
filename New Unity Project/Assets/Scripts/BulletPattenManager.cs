@@ -35,6 +35,11 @@ public class BulletPattenManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(Input.GetKeyDown(KeyCode.A))
+        {
+            GameManager.GetInstance().StartNextLevel();
+        }
+        //return;
         _patternTimeCount += Time.deltaTime;
 
 
@@ -57,18 +62,27 @@ public class BulletPattenManager : MonoBehaviour
     {
         if (!GameManager.GetInstance().IsDie && BulletManager.GetInstance().CheckBullet())
         {
-            int Pattern = Random.Range(0, 4);
-
-            while (Pattern == _prvePattern)
+            if(!GameManager.GetInstance().IsNextLevel)
             {
-                Pattern = Random.Range(0, 4);
-            }
+                if(GameManager.GetInstance().LevelCnt >= GameManager.GetInstance().MaxLevel)
+                {
+                    GameManager.GetInstance().IsNextLevel = true;
+                    GameManager.GetInstance().StartNextLevel();
+                    return;
+                }
+                int Pattern = Random.Range(0, 4);
 
-            SetPattern(Pattern);
-            _prvePattern = Pattern;
-            _patternTimeCount = 0f;
-            GameManager.GetInstance().LevelCnt++;
-            Debug.Log(GameManager.GetInstance().LevelCnt);
+                while (Pattern == _prvePattern)
+                {
+                    Pattern = Random.Range(0, 4);
+                }
+
+                SetPattern(Pattern);
+                _prvePattern = Pattern;
+                _patternTimeCount = 0f;
+                GameManager.GetInstance().LevelCnt++;
+                Debug.Log(GameManager.GetInstance().LevelCnt);
+            }
         }
     }
 

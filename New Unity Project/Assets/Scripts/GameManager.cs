@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,11 +27,17 @@ public class GameManager : MonoBehaviour
 
     public int MaxLevel = 3;
     public bool IsDie = false;
+    public bool IsNextLevel = false;
 
+    public ParticleSystem[] ParticleSystemArr;
+
+
+    [HideInInspector]
     public int CurrentPatternTotalBallNumber = 0;
     private int _currentPatternBallCnt = 0;
     private int _levelCnt = 0;
 
+    [HideInInspector]
     public float CurrentPatternTotalTime = 0f;
     private float _currentPatternTimeCount = 0f;
     private bool _isPattern = false;
@@ -78,8 +85,33 @@ public class GameManager : MonoBehaviour
             _currentPatternTimeCount += Time.deltaTime;
     }
 
+    public void StartNextLevel()
+    {
+        //LevelCnt = 3;
+        //sprCircleBg.fillAmount = 1f;
+        for (int i = 0; i < MaxLevel; ++i)
+        {
+            Invoke("levelAniamtion", 0.5f * i);
+        }
+    }
+
+    private void levelAniamtion()
+    {
+        LevelCnt--;
+        DOTween.To(() => sprCircleBg.fillAmount, x => sprCircleBg.fillAmount = x, (float)LevelCnt / (float)MaxLevel, 0.5f).SetEase(Ease.Linear);
+        Debug.Log((float)LevelCnt / (float)MaxLevel);
+        for (int i = 0; i < ParticleSystemArr.Length; ++i)
+        {
+            ParticleSystemArr[i].Stop();
+            ParticleSystemArr[i].Play();
+        }
+        if (LevelCnt == 0)
+            IsNextLevel = false;
+    }
+
     public void SetLevelProgeress()
     {
+        float FillAmount = 0f;
         if (_isTimeCheck)
         {
             if (_currentPatternTimeCount >= CurrentPatternTotalTime)
@@ -87,8 +119,7 @@ public class GameManager : MonoBehaviour
                 _isPattern = false;
                 _currentPatternTimeCount = CurrentPatternTotalTime;
             }
-
-            sprCircleBg.fillAmount = (((float)_currentPatternTimeCount / (float)CurrentPatternTotalTime) / (float)MaxLevel) + ((float)(LevelCnt - 1) / (float)MaxLevel);
+            FillAmount = (((float)_currentPatternTimeCount / (float)CurrentPatternTotalTime) / (float)MaxLevel) + ((float)(LevelCnt - 1) / (float)MaxLevel);
         }
         else
         {
@@ -97,10 +128,11 @@ public class GameManager : MonoBehaviour
                 _isPattern = false;
                 _currentPatternBallCnt = CurrentPatternTotalBallNumber;
             }
-
-            sprCircleBg.fillAmount = (((float)_currentPatternBallCnt / (float)CurrentPatternTotalBallNumber) / (float)MaxLevel) + ((float)(LevelCnt - 1) / (float)MaxLevel);
+            FillAmount = (((float)_currentPatternBallCnt / (float)CurrentPatternTotalBallNumber) / (float)MaxLevel) + ((float)(LevelCnt - 1) / (float)MaxLevel);
             _currentPatternBallCnt++;
         }
+
+        DOTween.To(() => sprCircleBg.fillAmount, x => sprCircleBg.fillAmount = x, FillAmount, 0.1f).SetEase(Ease.Linear);
     }
 
     public void SetBallCnt()
@@ -139,7 +171,7 @@ public class GameManager : MonoBehaviour
         //yield return new WaitForSeconds(particle.main.duration);
         float elapsedTime = 0f;
 
-        while(true)
+        while (true)
         {
             yield return new WaitForEndOfFrame();
 
@@ -148,7 +180,7 @@ public class GameManager : MonoBehaviour
 
             elapsedTime += Time.deltaTime;
 
-            particle.transform.localScale = new Vector2 (95f * objCircleBg.transform.localScale.x, 95f * objCircleBg.transform.localScale.y) ;
+            particle.transform.localScale = new Vector2(95f * objCircleBg.transform.localScale.x, 95f * objCircleBg.transform.localScale.y);
         }
 
         particle.gameObject.SetActive(false);
