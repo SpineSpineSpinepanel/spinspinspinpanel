@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
         return instance;
     }
 
+    public Player player;
     public UISprite sprCircleBg;
     public GameObject objCircleBg;
 
@@ -32,12 +33,12 @@ public class GameManager : MonoBehaviour
     public ParticleSystem[] ParticleSystemArr;
 
 
-    [HideInInspector]
+    //[HideInInspector]
     public int CurrentPatternTotalBallNumber = 0;
     private int _currentPatternBallCnt = 0;
     private int _levelCnt = 0;
 
-    [HideInInspector]
+    //[HideInInspector]
     public float CurrentPatternTotalTime = 0f;
     private float _currentPatternTimeCount = 0f;
     private bool _isPattern = false;

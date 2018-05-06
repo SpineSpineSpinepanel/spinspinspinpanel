@@ -10,9 +10,23 @@ public class Player : MonoBehaviour
     public float SpinSpeed;
     public ParticleSystem particle_Die;
 
-    private float _fAngle = 0f;
+    private float _angle = 0f;
 
     public bool Isimmortal = false;
+
+    public float Angle
+    {
+        get
+        {
+            return _angle;
+        }
+
+        set
+        {
+            _angle = value;
+        }
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -27,17 +41,17 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            _fAngle += Speed * Time.deltaTime;
+            Angle += Speed * Time.deltaTime;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            _fAngle -= Speed * Time.deltaTime;
+            Angle -= Speed * Time.deltaTime;
         }
 
         Vector3 vPos = Vector3.zero;
 
-        vPos.x = 0f + (Radius * (float) Mathf.Cos(_fAngle * Mathf.PI));
-        vPos.y = 0f + (Radius * (float) Mathf.Sin(_fAngle * Mathf.PI));
+        vPos.x = 0f + (Radius * (float)Mathf.Cos(Angle * Mathf.PI));
+        vPos.y = 0f + (Radius * (float)Mathf.Sin(Angle * Mathf.PI));
         vPos.z = 0f;
 
         transform.localPosition = vPos;
@@ -51,6 +65,11 @@ public class Player : MonoBehaviour
     //        Debug.Log("Die");
     //    }
     //}
+
+    public float GetAngle()
+    {
+        return (_angle * Mathf.PI) * (180 / Mathf.PI);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

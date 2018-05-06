@@ -34,7 +34,8 @@ public class Pattern05 : IPattern
             setTweenAngle(i, i % 2 == 0 ? 1 : -1);
         }
     }
-    
+
+    int nBulletCnt = 0;
     public void OnUpdate(float deletaTime)
     {
         for (int i = 0; i < infolist.Count; ++i)
@@ -48,6 +49,7 @@ public class Pattern05 : IPattern
 
                 infolist[i].listMyBullet.Add(temp);
                 infolist[i].CreateTimeCount = 0f;
+                nBulletCnt++;
             }
 
             for (int j = 0; j < infolist[i].listMyBullet.Count; ++j)
@@ -55,6 +57,11 @@ public class Pattern05 : IPattern
                 infolist[i].listMyBullet[j].SetBulletAngleInfo(infolist[i].TweenAngle);
             }
         }
+
+    }
+
+    public void OnEnd()
+    {
 
     }
 
@@ -68,29 +75,14 @@ public class Pattern05 : IPattern
         return false;
     }
 
-    public void OnEnd()
-    {
-        throw new System.NotImplementedException();
-    }
-
     void setTweenAngle(int index, int direction)
     {
-        if (direction == 1)
-        {
-            _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle + _animationAngle, _animationTime).SetEase(_curve_Angle).OnComplete(
-                () =>
-                {
-                    infolist.Remove(infolist[index]);
-                }));
-        }
-        else
-        {
-            _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle - _animationAngle, _animationTime).SetEase(_curve_Angle).OnComplete(
-                () =>
-                {
-                    infolist.Remove(infolist[index]);
-                }));
-        }
+        _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle + _animationAngle, _animationTime).SetEase(_curve_Angle).OnComplete(
+            () =>
+            {
+                infolist.Remove(infolist[index]);
+            }));
+
     }
 
     void setPatten1Info(int BulletWaveCount)
@@ -101,7 +93,7 @@ public class Pattern05 : IPattern
             PATTERN01INFO info = new PATTERN01INFO();
 
             info.TweenAngle = WaveStartAngle * (i + 1);
-            info.CreateTime = 0.5f;
+            info.CreateTime = 0.1f;
             infolist.Add(info);
         }
     }
