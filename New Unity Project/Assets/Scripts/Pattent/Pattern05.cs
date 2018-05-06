@@ -2,18 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using System.Timers;
 
-public class PATTERN02INFO
-{
-    public float TweenAngle = 0f;
-    public float CreateTime = 0.1f;
-    public float CreateTimeCount = 0f;
-
-    public List<BasicBullet> listMyBullet = new List<BasicBullet>();
-}
-
-public class Pattern02 : IPattern
+public class Pattern05 : IPattern
 {
     List<PATTERN01INFO> infolist = new List<PATTERN01INFO>();
 
@@ -26,7 +16,7 @@ public class Pattern02 : IPattern
 
     private List<Tweener> _tweener = new List<Tweener>();
 
-    public Pattern02(int _waveCount, float _animationTime, float _bulletAnimationTime, float _animationAngle, AnimationCurve _curve_Angle)
+    public Pattern05(int _waveCount, float _animationTime, float _bulletAnimationTime, float _animationAngle, AnimationCurve _curve_Angle)
     {
         this._waveCount = _waveCount;
         this._animationTime = _animationTime;
@@ -41,13 +31,10 @@ public class Pattern02 : IPattern
 
         for (int i = 0; i < infolist.Count; ++i)
         {
-            setTweenAngle(i);
+            setTweenAngle(i, i % 2 == 0 ? 1 : -1);
         }
-
     }
-
-    int nBulletCnt = 0;
-    float _TestTimeCount = 0f;
+    
     public void OnUpdate(float deletaTime)
     {
         for (int i = 0; i < infolist.Count; ++i)
@@ -61,18 +48,14 @@ public class Pattern02 : IPattern
 
                 infolist[i].listMyBullet.Add(temp);
                 infolist[i].CreateTimeCount = 0f;
-                nBulletCnt++;
+            }
+
+            for (int j = 0; j < infolist[i].listMyBullet.Count; ++j)
+            {
+                infolist[i].listMyBullet[j].SetBulletAngleInfo(infolist[i].TweenAngle);
             }
         }
-    }
 
-    void CreateBullet(int i)
-    {
-
-    }
-
-    public void OnEnd()
-    {
     }
 
     public bool IsTweening()
@@ -85,13 +68,29 @@ public class Pattern02 : IPattern
         return false;
     }
 
-    void setTweenAngle(int index)
+    public void OnEnd()
     {
-        _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle + _animationAngle, _animationTime).SetEase(_curve_Angle).OnComplete(
-            () =>
-            {
-                //infolist.Remove(infolist[index]);
-            }));
+        throw new System.NotImplementedException();
+    }
+
+    void setTweenAngle(int index, int direction)
+    {
+        if (direction == 1)
+        {
+            _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle + _animationAngle, _animationTime).SetEase(_curve_Angle).OnComplete(
+                () =>
+                {
+                    infolist.Remove(infolist[index]);
+                }));
+        }
+        else
+        {
+            _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle - _animationAngle, _animationTime).SetEase(_curve_Angle).OnComplete(
+                () =>
+                {
+                    infolist.Remove(infolist[index]);
+                }));
+        }
     }
 
     void setPatten1Info(int BulletWaveCount)
@@ -102,7 +101,7 @@ public class Pattern02 : IPattern
             PATTERN01INFO info = new PATTERN01INFO();
 
             info.TweenAngle = WaveStartAngle * (i + 1);
-            info.CreateTime = 0.1f;
+            info.CreateTime = 0.5f;
             infolist.Add(info);
         }
     }

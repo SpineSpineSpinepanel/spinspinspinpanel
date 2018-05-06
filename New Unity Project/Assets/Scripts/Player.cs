@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
     public float Speed = 0f;
     public float Radius;
     public float SpinSpeed;
-
+    public ParticleSystem particle_Die;
 
     private float _fAngle = 0f;
 
@@ -56,6 +56,9 @@ public class Player : MonoBehaviour
     {
         if (!Isimmortal && collision.tag.Equals("Ball"))
         {
+            gameObject.SetActive(false);
+            particle_Die.gameObject.transform.localPosition = transform.localPosition;
+            particle_Die.Play();
             GameManager.GetInstance().IsDie = true;
         }
     }

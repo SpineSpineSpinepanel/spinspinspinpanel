@@ -19,11 +19,6 @@ public class Pattern03 : IPattern
         _createTime = CreateTime;
     }
 
-    public int GetTotalBallCount()
-    {
-        return _totalBallNumber;
-    }
-
     public bool IsTweening()
     {
         return _tweening;

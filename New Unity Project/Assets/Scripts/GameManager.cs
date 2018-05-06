@@ -87,8 +87,6 @@ public class GameManager : MonoBehaviour
 
     public void StartNextLevel()
     {
-        //LevelCnt = 3;
-        //sprCircleBg.fillAmount = 1f;
         for (int i = 0; i < MaxLevel; ++i)
         {
             Invoke("levelAniamtion", 0.5f * i);
@@ -98,15 +96,21 @@ public class GameManager : MonoBehaviour
     private void levelAniamtion()
     {
         LevelCnt--;
-        DOTween.To(() => sprCircleBg.fillAmount, x => sprCircleBg.fillAmount = x, (float)LevelCnt / (float)MaxLevel, 0.5f).SetEase(Ease.Linear);
+        DOTween.To(() => sprCircleBg.fillAmount, x => sprCircleBg.fillAmount = x, (float)LevelCnt / (float)MaxLevel, 0.5f).SetEase(Ease.Linear).OnComplete(() =>
+        {
+            if (LevelCnt == 0)
+            {
+                IsNextLevel = false;
+                BulletPattenManager.GetInstance().CreateNewPattern();
+            }
+
+        });
         Debug.Log((float)LevelCnt / (float)MaxLevel);
         for (int i = 0; i < ParticleSystemArr.Length; ++i)
         {
             ParticleSystemArr[i].Stop();
             ParticleSystemArr[i].Play();
         }
-        if (LevelCnt == 0)
-            IsNextLevel = false;
     }
 
     public void SetLevelProgeress()

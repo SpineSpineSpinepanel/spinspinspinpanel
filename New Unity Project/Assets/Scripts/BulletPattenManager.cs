@@ -88,7 +88,7 @@ public class BulletPattenManager : MonoBehaviour
 
     public void SetPattern(int pattern)
     {
-        if(pattern == 0)
+        if (pattern == 0)
         {
             IPattern patten = new Pattern01(15, 10f, 1.5f, 180f, curve_Angle);
             patten.OnStart();
@@ -120,11 +120,4 @@ public class BulletPattenManager : MonoBehaviour
             GameManager.GetInstance().InitPatternStart(11.5f);
         }
     }
-
-    public int GetCurrentPatternBallCnt()
-    {
-        return CurPattern.GetTotalBallCount();
-    }
-
-
 }

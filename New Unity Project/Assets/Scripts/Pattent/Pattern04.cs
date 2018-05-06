@@ -116,11 +116,4 @@ public class Pattern04 : IPattern
             infolist.Add(info);
         }
     }
-
-    public int GetTotalBallCount()
-    {
-        int cnt = (int)((_animationTime / 0.5f * _waveCount) - _waveCount);
-
-        return cnt;
-    }
 }

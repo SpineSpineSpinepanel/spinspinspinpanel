@@ -6,5 +6,4 @@ public interface IPattern
     void OnEnd();
 
     bool IsTweening();
-    int GetTotalBallCount();
 }
