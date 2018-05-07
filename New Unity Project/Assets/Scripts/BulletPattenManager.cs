@@ -72,14 +72,14 @@ public class BulletPattenManager : MonoBehaviour
                     GameManager.GetInstance().StartNextLevel();
                     return;
                 }
-                int Pattern = Random.Range(0, 7);
+                int Pattern = Random.Range(0, 9);
 
                 while (Pattern == _prvePattern)
                 {
-                    Pattern = Random.Range(0, 7);
+                    Pattern = Random.Range(0, 9);
                 }
 
-                SetPattern(6);
+                SetPattern(Pattern);
                 _prvePattern = Pattern;
                 _patternTimeCount = 0f;
                 GameManager.GetInstance().LevelCnt++;
@@ -140,10 +140,26 @@ public class BulletPattenManager : MonoBehaviour
 
         if (pattern == 6)
         {
-            IPattern patten = new Pattern07(1f, 1.5f, 20f, 0.25f, 20f, 8, curve_Angle04);
+            IPattern patten = new Pattern07(1f, 1.5f, 25f, 0.25f, 15f, 8, curve_Angle04);
             patten.OnStart();
             CurPattern = patten;
             GameManager.GetInstance().InitPatternStart((1f * 8f) + (2f * 0.25f));
+        }
+
+        if (pattern == 7)
+        {
+            IPattern patten = new Pattern08(3, 10f, 1.5f, 360f, 0.1f, 0.3f, curve_Angle);
+            patten.OnStart();
+            CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
+        }
+
+        if (pattern == 8)
+        {
+            IPattern patten = new Pattern08(8, 10f, 1.5f, 270f, 0.3f, 0.3f, curve_Angle);
+            patten.OnStart();
+            CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
         }
     }
 }

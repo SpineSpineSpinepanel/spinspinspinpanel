@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
             if (LevelCnt == 0)
             {
                 IsNextLevel = false;
-                BulletPattenManager.GetInstance().CreateNewPattern();
+                Invoke("StartNextPattern",0.5f);
             }
 
         });
@@ -112,6 +112,11 @@ public class GameManager : MonoBehaviour
             ParticleSystemArr[i].Stop();
             ParticleSystemArr[i].Play();
         }
+    }
+
+    private void StartNextPattern()
+    {
+        BulletPattenManager.GetInstance().CreateNewPattern();
     }
 
     public void SetLevelProgeress()
