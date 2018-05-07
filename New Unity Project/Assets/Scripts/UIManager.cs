@@ -6,7 +6,7 @@ using DG.Tweening;
 public class UIManager : MonoBehaviour
 {
     public GameObject objTitle = null;
-    public GameObject objStartButton = null;
+    public GameObject objButton = null;
     public UILabel lbTimer = null;
 
     public AnimationCurve curve_MainUIAnim = null;
@@ -76,7 +76,7 @@ public class UIManager : MonoBehaviour
         float duration = 0.5f;
 
         objTitle.transform.DOLocalMoveY(500f, duration).SetEase(curve_MainUIAnim);
-        objStartButton.transform.DOLocalMoveY(-530f, duration).SetEase(curve_MainUIAnim).SetDelay(duration).OnComplete(() =>
+        objButton.transform.DOLocalMoveY(-270f, duration).SetEase(curve_MainUIAnim).SetDelay(duration).OnComplete(() =>
         {
             _isTimer = true;
         });
