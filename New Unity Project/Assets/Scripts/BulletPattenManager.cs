@@ -31,7 +31,6 @@ public class BulletPattenManager : MonoBehaviour
     void Start()
     {
         DOTween.useSmoothDeltaTime = true;
-        CreateNewPattern();
     }
 
     // Update is called once per frame

@@ -5,33 +5,80 @@ using DG.Tweening;
 
 public class UIManager : MonoBehaviour
 {
-    public UISprite sprTitle = null;
-    public UISprite sprStartButton = null;
+    public GameObject objTitle = null;
+    public GameObject objStartButton = null;
+    public UILabel lbTimer = null;
 
     public AnimationCurve curve_MainUIAnim = null;
 
+    private int _cnt = 3;
+    private float _timerCnt = 1f;
+    private bool _isTimer = false;
+
+    private void Start()
+    {
+        lbTimer.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (_isTimer)
+        {
+            _timerCnt += Time.deltaTime;
+            if (_timerCnt >= 1f)
+            {
+                _timerCnt = 0f;
+                updateTimer();
+            }
+        }
+    }
+
+    private void updateTimer()
+    {
+        lbTimer.gameObject.SetActive(true);
+        lbTimer.alpha = 0f;
+        lbTimer.transform.localScale = new Vector3(0f, 0f, 1f);
+
+        if (_cnt != 0)
+            lbTimer.text = "" + _cnt;
+        else
+            lbTimer.text = "Start~!";
+
+        Debug.Log(_cnt);
+
+        lbTimer.transform.DOScale(1f, 1f);
+        DOTween.ToAlpha(() => lbTimer.color, x => lbTimer.color = x, 1f, 1f).OnComplete(() =>
+        {
+            if (_cnt == -1)
+            {
+                _isTimer = false;
+                gamestart();
+            }
+        });
+        _cnt--;
+    }
+
+    private void gamestart()
+    {
+        lbTimer.alpha = 1f;
+
+        lbTimer.transform.DOScale(0f, 1f);
+        DOTween.ToAlpha(() => lbTimer.color, x => lbTimer.color = x, 0f, 1f).OnComplete(() =>
+        {
+            GameManager.GetInstance().OnGameStart();
+        });
+
+    }
+
+
     public void StartButtonAction()
     {
-        float screenY = 720f * 0.5f;
-        float animDuration = 0.5f;
+        float duration = 0.5f;
 
-        float titlePosY = sprTitle.transform.localPosition.y;
-        float buttonPosY = sprStartButton.transform.localPosition.y;
-
-        DOTween.To(() => titlePosY, newTitleY => titlePosY = newTitleY, screenY + (sprTitle.height * 0.5f), animDuration).SetEase(curve_MainUIAnim).OnUpdate(() =>
-             {
-                 sprTitle.transform.localPosition = new Vector2(0, titlePosY);
-             }).OnComplete(() =>
-             {
-                 sprTitle.gameObject.SetActive(false);
-                 DOTween.To(() => buttonPosY, newButtonY => buttonPosY = newButtonY, -screenY - (sprStartButton.height * 0.5f), animDuration).SetEase(curve_MainUIAnim).OnUpdate(() =>
-                 {
-                     sprStartButton.transform.localPosition = new Vector2(0, buttonPosY);
-                 }).OnComplete(() =>
-                 {
-                     sprStartButton.gameObject.SetActive(false);
-                     Debug.Log("Game Start.");
-                 });
-             });
+        objTitle.transform.DOLocalMoveY(500f, duration).SetEase(curve_MainUIAnim);
+        objStartButton.transform.DOLocalMoveY(-530f, duration).SetEase(curve_MainUIAnim).SetDelay(duration).OnComplete(() =>
+        {
+            _isTimer = true;
+        });
     }
 }

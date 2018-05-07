@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
         return instance;
     }
 
+    public AudioSource audio_MainBGM;
     public Player player;
     public UISprite sprCircleBg;
     public GameObject objCircleBg;
@@ -84,6 +85,12 @@ public class GameManager : MonoBehaviour
     {
         if (_isPattern && _isTimeCheck)
             _currentPatternTimeCount += Time.deltaTime;
+    }
+
+    public void OnGameStart()
+    {
+        BulletPattenManager.GetInstance().CreateNewPattern();
+        audio_MainBGM.Play();
     }
 
     public void StartNextLevel()
