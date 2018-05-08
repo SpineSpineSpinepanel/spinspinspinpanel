@@ -24,6 +24,7 @@ public class BulletPattenManager : MonoBehaviour
     public AnimationCurve curve_Angle02;
     public AnimationCurve curve_Angle03;
     public AnimationCurve curve_Angle04;
+    public AnimationCurve curve_Angle05;
 
     private float _patternTimeCount = 0f;
     private int _prvePattern = -1;
@@ -160,5 +161,14 @@ public class BulletPattenManager : MonoBehaviour
             CurPattern = patten;
             GameManager.GetInstance().InitPatternStart(11.5f);
         }
+
+        if (pattern == 9)
+        {
+            IPattern patten = new Pattern02(4, 10f, 1.5f, 270f, curve_Angle05);
+            patten.OnStart();
+            CurPattern = patten;
+            GameManager.GetInstance().InitPatternStart(11.5f);
+        }
+
     }
 }
