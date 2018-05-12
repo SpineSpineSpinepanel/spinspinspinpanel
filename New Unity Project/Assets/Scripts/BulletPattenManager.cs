@@ -71,7 +71,7 @@ public class BulletPattenManager : MonoBehaviour
                     GameManager.GetInstance().StartNextLevel();
                     return;
                 }
-                int Pattern = 9;//Random.Range(0, 9); <- For Test.
+                int Pattern = Random.Range(0, 9);//9  <- For Test.
 
                 while (Pattern == _prvePattern)
                 {

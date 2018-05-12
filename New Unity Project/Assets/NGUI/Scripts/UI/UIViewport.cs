@@ -1,7 +1,7 @@
-//-------------------------------------------------
+﻿//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
 
@@ -23,7 +23,7 @@ public class UIViewport : MonoBehaviour
 
 	void Start ()
 	{
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 		mCam = camera;
 #else
 		mCam = GetComponent<Camera>();
@@ -35,21 +35,16 @@ public class UIViewport : MonoBehaviour
 	{
 		if (topLeft != null && bottomRight != null)
 		{
-			if (topLeft.gameObject.activeInHierarchy)
-			{
-				Vector3 tl = sourceCamera.WorldToScreenPoint(topLeft.position);
-				Vector3 br = sourceCamera.WorldToScreenPoint(bottomRight.position);
+			Vector3 tl = sourceCamera.WorldToScreenPoint(topLeft.position);
+			Vector3 br = sourceCamera.WorldToScreenPoint(bottomRight.position);
 
-				Rect rect = new Rect(tl.x / Screen.width, br.y / Screen.height,
-					(br.x - tl.x) / Screen.width, (tl.y - br.y) / Screen.height);
+			Rect rect = new Rect(tl.x / Screen.width, br.y / Screen.height,
+				(br.x - tl.x) / Screen.width, (tl.y - br.y) / Screen.height);
 
-				float size = fullSize * rect.height;
+			float size = fullSize * rect.height;
 
-				if (rect != mCam.rect) mCam.rect = rect;
-				if (mCam.orthographicSize != size) mCam.orthographicSize = size;
-				mCam.enabled = true;
-			}
-			else mCam.enabled = false;
+			if (rect != mCam.rect) mCam.rect = rect;
+			if (mCam.orthographicSize != size) mCam.orthographicSize = size;
 		}
 	}
 }

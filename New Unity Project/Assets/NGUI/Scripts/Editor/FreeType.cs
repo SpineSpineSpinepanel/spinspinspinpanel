@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using System;
 using System.IO;
@@ -282,6 +282,11 @@ static public class FreeType
 		public int y;
 	}
 	
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
+	const string libName = "FreeType";
+#else
+	const string libName = "FreeType64";
+#endif
 	static bool mFound = false;
 
 	/// <summary>
@@ -306,7 +311,7 @@ static public class FreeType
 				}
 				else
 				{
-					string filename = "FreeType.dylib";
+					string filename = libName + ".dylib";
 
 					if (File.Exists("/usr/local/lib/" + filename))
 					{
@@ -348,63 +353,63 @@ static public class FreeType
 	/// Initialize the FreeType library. Must be called first before doing anything else.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_Init_FreeType (out IntPtr library);
 
 	/// <summary>
 	/// Return the glyph index of a given character code. This function uses a charmap object to do the mapping.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern uint FT_Get_Char_Index (IntPtr face, uint charcode);
 
 	/// <summary>
 	/// This function calls FT_Open_Face to open a font by its pathname.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_New_Face (IntPtr library, string filepathname, int face_index, out IntPtr face);
 
 	/// <summary>
 	/// Discard a given face object, as well as all of its child slots and sizes.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_Done_Face (IntPtr face);
 
 	/// <summary>
 	/// A function used to load a single glyph into the glyph slot of a face object.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_Load_Glyph (IntPtr face, uint glyph_index, int load_flags);
 
 	/// <summary>
 	/// Convert a given glyph image to a bitmap.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_Render_Glyph (ref FT_GlyphSlotRec slot, FT_Render_Mode render_mode);
 
 	/// <summary>
 	/// Retrieve kerning information for the specified pair of characters.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_Get_Kerning (IntPtr face, uint left, uint right, uint kern_mode, out FT_Vector kerning);
 
 	/// <summary>
 	/// This function calls FT_Request_Size to request the nominal size (in pixels).
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_Set_Pixel_Sizes (IntPtr face, uint pixel_width, uint pixel_height);
 
 	/// <summary>
 	/// Notify FreeType that you are done using the library. Should be called at the end.
 	/// </summary>
 
-	[DllImport("FreeType", CallingConvention = CallingConvention.Cdecl)]
+	[DllImport(libName, CallingConvention = CallingConvention.Cdecl)]
 	static extern int FT_Done_FreeType (IntPtr library);
 
 	/// <summary>

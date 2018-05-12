@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
 using UnityEditor;
@@ -372,20 +372,14 @@ public class NGUISettings
 
 	static public bool unityPacking
 	{
-		get { return GetBool("NGUI Atlas Packing", false); }
-		set { SetBool("NGUI Atlas Packing", value); }
+		get { return GetBool("NGUI Packing", true); }
+		set { SetBool("NGUI Packing", value); }
 	}
 
 	static public bool trueColorAtlas
 	{
 		get { return GetBool("NGUI Truecolor", true); }
 		set { SetBool("NGUI Truecolor", value); }
-	}
-
-	static public bool autoUpgradeSprites
-	{
-		get { return GetBool("NGUI AutoUpgrade", false); }
-		set { SetBool("NGUI AutoUpgrade", value); }
 	}
 
 	static public bool keepPadding
@@ -424,32 +418,31 @@ public class NGUISettings
 		set { SetString("NGUI Chars", value); }
 	}
 
-	static public string defaultPathToFreeType
-	{
-		get
-		{
-			string path = Application.dataPath;
-			if (System.IntPtr.Size == 8) path = System.IO.Path.Combine(path, "NGUI/Editor/x86_64/");
-			else path = System.IO.Path.Combine(path, "NGUI/Editor/x86/");
-
-			var platform = Application.platform;
-			if (platform == RuntimePlatform.WindowsEditor) path = System.IO.Path.Combine(path, "FreeType.dll");
-			else if (platform == RuntimePlatform.OSXEditor) path = System.IO.Path.Combine(path, "FreeType.dylib");
-			return path.Replace('\\', '/');
-		}
-	}
-
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 	static public string pathToFreeType
 	{
 		get
 		{
-			string s = GetString(System.IntPtr.Size == 8 ? "NGUI FreeType64" : "NGUI FreeType", null);
-			if (string.IsNullOrEmpty(s)) s = defaultPathToFreeType;
-			else if (!System.IO.File.Exists(s)) s = defaultPathToFreeType;
-			return s;
+			string path = Application.dataPath;
+			if (Application.platform == RuntimePlatform.WindowsEditor) path += "/NGUI/Editor/FreeType.dll";
+			else path += "/NGUI/Editor/FreeType.dylib";
+			return GetString("NGUI FreeType", path);
 		}
-		set { SetString(System.IntPtr.Size == 8 ? "NGUI FreeType64" : "NGUI FreeType", value); }
+		set { SetString("NGUI FreeType", value); }
 	}
+#else
+	static public string pathToFreeType
+	{
+		get
+		{
+			string path = Application.dataPath;
+			if (Application.platform == RuntimePlatform.WindowsEditor) path += "/NGUI/Editor/FreeType64.dll";
+			else path += "/NGUI/Editor/FreeType64.dylib";
+			return GetString("NGUI FreeType64", path);
+		}
+		set { SetString("NGUI FreeType64", value); }
+	}
+#endif
 
 	static public string searchField
 	{

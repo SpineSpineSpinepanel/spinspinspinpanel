@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEditor;
 using UnityEngine;
@@ -74,12 +74,7 @@ public class SpriteSelector : ScriptableWizard
 			
 			float size = 80f;
 			float padded = size + 10f;
-#if UNITY_4_7
-			int screenWidth = Screen.width;
-#else
-			int screenWidth = (int)EditorGUIUtility.currentViewWidth;
-#endif
-			int columns = Mathf.FloorToInt(screenWidth / padded);
+			int columns = Mathf.FloorToInt(Screen.width / padded);
 			if (columns < 1) columns = 1;
 
 			int offset = 0;

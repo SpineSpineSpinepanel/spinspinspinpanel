@@ -193,7 +193,7 @@ public class NGUIJson
 	/// </summary>
 	/// <param name="json">A JSON string.</param>
 	/// <returns>An ArrayList, a Hashtable, a double, a string, null, true, or false</returns>
-	static public object jsonDecode( string json )
+	public static object jsonDecode( string json )
 	{
 		// save the string for debug information
 		NGUIJson.lastDecode = json;
@@ -224,7 +224,7 @@ public class NGUIJson
 	/// </summary>
 	/// <param name="json">A Hashtable / ArrayList</param>
 	/// <returns>A JSON encoded string, or null if object 'json' is not serializable</returns>
-	static public string jsonEncode( object json )
+	public static string jsonEncode( object json )
 	{
 		var builder = new StringBuilder( BUILDER_CAPACITY );
 		var success = NGUIJson.serializeValue( json, builder );
@@ -237,7 +237,7 @@ public class NGUIJson
 	/// On decoding, this function returns the position at which the parse failed (-1 = no error).
 	/// </summary>
 	/// <returns></returns>
-	static public bool lastDecodeSuccessful()
+	public static bool lastDecodeSuccessful()
 	{
 		return ( NGUIJson.lastErrorIndex == -1 );
 	}
@@ -247,7 +247,7 @@ public class NGUIJson
 	/// On decoding, this function returns the position at which the parse failed (-1 = no error).
 	/// </summary>
 	/// <returns></returns>
-	static public int getLastErrorIndex()
+	public static int getLastErrorIndex()
 	{
 		return NGUIJson.lastErrorIndex;
 	}
@@ -258,7 +258,7 @@ public class NGUIJson
 	/// at which the error took place. To ease debugging.
 	/// </summary>
 	/// <returns></returns>
-	static public string getLastErrorSnippet()
+	public static string getLastErrorSnippet()
 	{
 		if( NGUIJson.lastErrorIndex == -1 )
 		{

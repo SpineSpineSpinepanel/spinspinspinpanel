@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ using System.Collections.Generic;
 /// Info,"Localization Example","Par exemple la localisation"
 /// </summary>
 
-static public class Localization
+public static class Localization
 {
 	public delegate byte[] LoadFunction (string path);
 	public delegate void OnLocalizeNotification ();
@@ -59,9 +59,6 @@ static public class Localization
 
 	// Key = Values dictionary (multiple languages)
 	static Dictionary<string, string[]> mDictionary = new Dictionary<string, string[]>();
-
-	// Replacement dictionary forces a specific value instead of the existing entry
-	static Dictionary<string, string> mReplacement = new Dictionary<string, string>();
 
 	// Index of the selected language within the multi-language dictionary
 	static int mLanguageIndex = -1;
@@ -212,22 +209,6 @@ static public class Localization
 	}
 
 	/// <summary>
-	/// Forcefully replace the specified key with another value.
-	/// </summary>
-
-	static public void ReplaceKey (string key, string val)
-	{
-		if (!string.IsNullOrEmpty(val)) mReplacement[key] = val;
-		else mReplacement.Remove(key);
-	}
-
-	/// <summary>
-	/// Clear the replacement values.
-	/// </summary>
-
-	static public void ClearReplacements () { mReplacement.Clear(); }
-
-	/// <summary>
 	/// Load the specified CSV file.
 	/// </summary>
 
@@ -301,13 +282,7 @@ static public class Localization
 				if (!HasLanguage(header[i]))
 				{
 					int newSize = mLanguages.Length + 1;
-#if UNITY_FLASH
-					string[] temp = new string[newSize];
-					for (int b = 0, bmax = arr.Length; b < bmax; ++b) temp[b] = mLanguages[b];
-					mLanguages = temp;
-#else
 					System.Array.Resize(ref mLanguages, newSize);
-#endif
 					mLanguages[newSize - 1] = header[i];
 
 					Dictionary<string, string[]> newDict = new Dictionary<string, string[]>();
@@ -315,13 +290,7 @@ static public class Localization
 					foreach (KeyValuePair<string, string[]> pair in mDictionary)
 					{
 						string[] arr = pair.Value;
-#if UNITY_FLASH
-						temp = new string[newSize];
-						for (int b = 0, bmax = arr.Length; b < bmax; ++b) temp[b] = arr[b];
-						arr = temp;
-#else
 						System.Array.Resize(ref arr, newSize);
-#endif
 						arr[newSize - 1] = arr[0];
 						newDict.Add(pair.Key, arr);
 					}
@@ -474,10 +443,8 @@ static public class Localization
 	/// Localize the specified value.
 	/// </summary>
 
-	static public string Get (string key, bool warnIfMissing = true)
+	static public string Get (string key)
 	{
-		if (string.IsNullOrEmpty(key)) return null;
-
 		// Ensure we have a language to work with
 		if (!localizationHasBeenSet) LoadDictionary(PlayerPrefs.GetString("Language", "English"));
 
@@ -511,34 +478,19 @@ static public class Localization
 		string val;
 		string[] vals;
 
-		UICamera.ControlScheme scheme = UICamera.currentScheme;
-
-		if (scheme == UICamera.ControlScheme.Touch)
+#if !UNITY_IPHONE && !UNITY_ANDROID && !UNITY_WP8 && !UNITY_BLACKBERRY
+		if (UICamera.currentScheme == UICamera.ControlScheme.Touch)
+#endif
 		{
-			string altKey = key + " Mobile";
-			if (mReplacement.TryGetValue(altKey, out val)) return val;
+			string mobKey = key + " Mobile";
 
-			if (mLanguageIndex != -1 && mDictionary.TryGetValue(altKey, out vals))
+			if (mLanguageIndex != -1 && mDictionary.TryGetValue(mobKey, out vals))
 			{
 				if (mLanguageIndex < vals.Length)
 					return vals[mLanguageIndex];
 			}
-			if (mOldDictionary.TryGetValue(altKey, out val)) return val;
+			if (mOldDictionary.TryGetValue(mobKey, out val)) return val;
 		}
-		else if (scheme == UICamera.ControlScheme.Controller)
-		{
-			string altKey = key + " Controller";
-			if (mReplacement.TryGetValue(altKey, out val)) return val;
-
-			if (mLanguageIndex != -1 && mDictionary.TryGetValue(altKey, out vals))
-			{
-				if (mLanguageIndex < vals.Length)
-					return vals[mLanguageIndex];
-			}
-			if (mOldDictionary.TryGetValue(altKey, out val)) return val;
-		}
-
-		if (mReplacement.TryGetValue(key, out val)) return val;
 
 		if (mLanguageIndex != -1 && mDictionary.TryGetValue(key, out vals))
 		{
@@ -553,7 +505,7 @@ static public class Localization
 		if (mOldDictionary.TryGetValue(key, out val)) return val;
 
 #if UNITY_EDITOR
-		if (warnIfMissing) Debug.LogWarning("Localization key not found: '" + key + "' for language " + lang);
+		Debug.LogWarning("Localization key not found: '" + key + "' for language " + lang);
 #endif
 		return key;
 	}
@@ -585,81 +537,5 @@ static public class Localization
 		else if (mOldDictionary.ContainsKey(mobKey)) return true;
 #endif
 		return mDictionary.ContainsKey(key) || mOldDictionary.ContainsKey(key);
-	}
-
-	/// <summary>
-	/// Add a new entry to the localization dictionary.
-	/// </summary>
-
-	static public void Set (string language, string key, string text)
-	{
-		// Check existing languages first
-		string[] kl = knownLanguages;
-		
-		if (kl == null)
-		{
-			mLanguages = new string[] { language };
-			kl = mLanguages;
-		}
-
-		for (int i = 0, imax = kl.Length; i < imax; ++i)
-		{
-			// Language match
-			if (kl[i] == language)
-			{
-				string[] vals;
-
-				// Get all language values for the desired key
-				if (!mDictionary.TryGetValue(key, out vals))
-				{
-					vals = new string[kl.Length];
-					mDictionary[key] = vals;
-					vals[0] = text;
-				}
-
-				// Assign the value for this language
-				vals[i] = text;
-				return;
-			}
-		}
-
-		// Expand the dictionary to include this new language
-		int newSize = mLanguages.Length + 1;
-#if UNITY_FLASH
-		string[] temp = new string[newSize];
-		for (int b = 0, bmax = arr.Length; b < bmax; ++b) temp[b] = mLanguages[b];
-		mLanguages = temp;
-#else
-		System.Array.Resize(ref mLanguages, newSize);
-#endif
-		mLanguages[newSize - 1] = language;
-
-		Dictionary<string, string[]> newDict = new Dictionary<string, string[]>();
-
-		foreach (KeyValuePair<string, string[]> pair in mDictionary)
-		{
-			string[] arr = pair.Value;
-#if UNITY_FLASH
-			temp = new string[newSize];
-			for (int b = 0, bmax = arr.Length; b < bmax; ++b) temp[b] = arr[b];
-			arr = temp;
-#else
-			System.Array.Resize(ref arr, newSize);
-#endif
-			arr[newSize - 1] = arr[0];
-			newDict.Add(pair.Key, arr);
-		}
-		mDictionary = newDict;
-
-		// Set the new value
-		string[] values;
-
-		if (!mDictionary.TryGetValue(key, out values))
-		{
-			values = new string[kl.Length];
-			mDictionary[key] = values;
-			values[0] = text;
-		}
-		values[newSize - 1] = text;
 	}
 }
