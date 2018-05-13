@@ -73,10 +73,10 @@ public class BulletPattenManager : MonoBehaviour
                 }
                 int Pattern = 9;//Random.Range(0, 9); <- For Test.
 
-                while (Pattern == _prvePattern)
-                {
-                    Pattern = Random.Range(0, 9);
-                }
+                //while (Pattern == _prvePattern)
+                //{
+                //    Pattern = Random.Range(0, 9);
+                //}
 
                 SetPattern(Pattern);
                 _prvePattern = Pattern;
@@ -163,7 +163,7 @@ public class BulletPattenManager : MonoBehaviour
 
         if(pattern == 9)
         {
-            IPattern patten = new Pattern09(10f, 1.5f, 360f*3);
+            IPattern patten = new Pattern10(15, 10f, 1.5f, 180f);
             patten.OnStart();
             CurPattern = patten;
             GameManager.GetInstance().InitPatternStart(11.5f);

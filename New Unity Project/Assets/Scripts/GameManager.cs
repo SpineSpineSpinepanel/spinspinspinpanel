@@ -89,6 +89,7 @@ public class GameManager : MonoBehaviour
 
     public void OnGameStart()
     {
+        Debug.Log("Game Start.");
         BulletPattenManager.GetInstance().CreateNewPattern();
         audio_MainBGM.Play();
     }
