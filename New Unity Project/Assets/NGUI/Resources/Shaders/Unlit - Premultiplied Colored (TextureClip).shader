@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 // Community contribution: http://www.tasharen.com/forum/index.php?topic=9268.0
 Shader "Hidden/Unlit/Premultiplied Colored (TextureClip)"
 {
@@ -15,7 +17,6 @@ Shader "Hidden/Unlit/Premultiplied Colored (TextureClip)"
 			"Queue" = "Transparent"
 			"IgnoreProjector" = "True"
 			"RenderType" = "Transparent"
-			"DisableBatching" = "True"
 		}
 		
 		Pass
@@ -26,7 +27,7 @@ Shader "Hidden/Unlit/Premultiplied Colored (TextureClip)"
 			AlphaTest Off
 			Fog { Mode Off }
 			Offset -1, -1
-			//ColorMask RGB
+			ColorMask RGB
 			Blend One OneMinusSrcAlpha
 
 			CGPROGRAM
@@ -47,7 +48,7 @@ Shader "Hidden/Unlit/Premultiplied Colored (TextureClip)"
 
 			struct v2f
 			{
-				float4 vertex : SV_POSITION;
+				float4 vertex : POSITION;
 				float2 texcoord : TEXCOORD0;
 				float2 clipUV : TEXCOORD1;
 				half4 color : COLOR;
@@ -63,7 +64,7 @@ Shader "Hidden/Unlit/Premultiplied Colored (TextureClip)"
 				return o;
 			}
 
-			half4 frag (v2f IN) : SV_Target
+			half4 frag (v2f IN) : COLOR
 			{
 				half alpha = tex2D(_ClipTex, IN.clipUV).a;
 				half4 col = tex2D(_MainTex, IN.texcoord) * IN.color;

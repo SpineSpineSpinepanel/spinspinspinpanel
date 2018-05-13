@@ -1,10 +1,9 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
-using System.Collections.Generic;
 
 /// <summary>
 /// This class makes it possible to activate or select something by pressing a key (such as space bar for example).
@@ -13,11 +12,6 @@ using System.Collections.Generic;
 [AddComponentMenu("NGUI/Interaction/Key Binding")]
 public class UIKeyBinding : MonoBehaviour
 {
-	static List<UIKeyBinding> mList = new List<UIKeyBinding>();
-
-#if W2
-	[Beebyte.Obfuscator.SkipRename]
-#endif
 	public enum Action
 	{
 		PressAndClick,
@@ -25,9 +19,6 @@ public class UIKeyBinding : MonoBehaviour
 		All,
 	}
 
-#if W2
-	[Beebyte.Obfuscator.SkipRename]
-#endif
 	public enum Modifier
 	{
 		Any,
@@ -55,42 +46,9 @@ public class UIKeyBinding : MonoBehaviour
 
 	public Action action = Action.PressAndClick;
 
-	[System.NonSerialized] bool mIgnoreUp = false;
-	[System.NonSerialized] bool mIsInput = false;
-	[System.NonSerialized] bool mPress = false;
-
-	/// <summary>
-	/// Key binding's descriptive caption.
-	/// </summary>
-
-	public string captionText
-	{
-		get
-		{
-			string s = NGUITools.KeyToCaption(keyCode);
-			if (modifier == Modifier.Alt) return "Alt+" + s;
-			if (modifier == Modifier.Control) return "Control+" + s;
-			if (modifier == Modifier.Shift) return "Shift+" + s;
-			return s;
-		}
-	}
-
-	/// <summary>
-	/// Check to see if the specified key happens to be bound to some element.
-	/// </summary>
-
-	static public bool IsBound (KeyCode key)
-	{
-		for (int i = 0, imax = mList.Count; i < imax; ++i)
-		{
-			UIKeyBinding kb = mList[i];
-			if (kb != null && kb.keyCode == key) return true;
-		}
-		return false;
-	}
-
-	protected virtual void OnEnable () { mList.Add(this); }
-	protected virtual void OnDisable () { mList.Remove(this); }
+	bool mIgnoreUp = false;
+	bool mIsInput = false;
+	bool mPress = false;
 
 	/// <summary>
 	/// If we're bound to an input field, subscribe to its Submit notification.
@@ -100,7 +58,7 @@ public class UIKeyBinding : MonoBehaviour
 	{
 		UIInput input = GetComponent<UIInput>();
 		mIsInput = (input != null);
-		if (input != null) EventDelegate.Add(input.onSubmit, OnSubmit);
+//		if (input != null) EventDelegate.Add(input.onSubmit, OnSubmit);
 	}
 
 	/// <summary>
@@ -113,39 +71,33 @@ public class UIKeyBinding : MonoBehaviour
 	/// Convenience function that checks whether the required modifier key is active.
 	/// </summary>
 
-	protected virtual bool IsModifierActive () { return IsModifierActive(modifier); }
-
-	/// <summary>
-	/// Convenience function that checks whether the required modifier key is active.
-	/// </summary>
-
-	static public bool IsModifierActive (Modifier modifier)
+	protected virtual bool IsModifierActive ()
 	{
 		if (modifier == Modifier.Any) return true;
 
 		if (modifier == Modifier.Alt)
 		{
-			if (UICamera.GetKey(KeyCode.LeftAlt) ||
-				UICamera.GetKey(KeyCode.RightAlt)) return true;
+			if (Input.GetKey(KeyCode.LeftAlt) ||
+				Input.GetKey(KeyCode.RightAlt)) return true;
 		}
 		else if (modifier == Modifier.Control)
 		{
-			if (UICamera.GetKey(KeyCode.LeftControl) ||
-				UICamera.GetKey(KeyCode.RightControl)) return true;
+			if (Input.GetKey(KeyCode.LeftControl) ||
+				Input.GetKey(KeyCode.RightControl)) return true;
 		}
 		else if (modifier == Modifier.Shift)
 		{
-			if (UICamera.GetKey(KeyCode.LeftShift) ||
-				UICamera.GetKey(KeyCode.RightShift)) return true;
+			if (Input.GetKey(KeyCode.LeftShift) ||
+				Input.GetKey(KeyCode.RightShift)) return true;
 		}
 		else if (modifier == Modifier.None)
 			return
-				!UICamera.GetKey(KeyCode.LeftAlt) &&
-				!UICamera.GetKey(KeyCode.RightAlt) &&
-				!UICamera.GetKey(KeyCode.LeftControl) &&
-				!UICamera.GetKey(KeyCode.RightControl) &&
-				!UICamera.GetKey(KeyCode.LeftShift) &&
-				!UICamera.GetKey(KeyCode.RightShift);
+				!Input.GetKey(KeyCode.LeftAlt) &&
+				!Input.GetKey(KeyCode.RightAlt) &&
+				!Input.GetKey(KeyCode.LeftControl) &&
+				!Input.GetKey(KeyCode.RightControl) &&
+				!Input.GetKey(KeyCode.LeftShift) &&
+				!Input.GetKey(KeyCode.RightShift);
 		return false;
 	}
 
@@ -157,19 +109,9 @@ public class UIKeyBinding : MonoBehaviour
 	{
 		if (UICamera.inputHasFocus) return;
 		if (keyCode == KeyCode.None || !IsModifierActive()) return;
-#if WINDWARD && UNITY_ANDROID
-		// NVIDIA Shield controller has an odd bug where it can open the on-screen keyboard via a KeyCode.Return binding,
-		// and then it can never be closed. I am disabling it here until I can track down the cause.
-		if (keyCode == KeyCode.Return && PlayerPrefs.GetInt("Start Chat") == 0) return;
-#endif
 
-#if UNITY_FLASH
 		bool keyDown = Input.GetKeyDown(keyCode);
 		bool keyUp = Input.GetKeyUp(keyCode);
-#else
-		bool keyDown = UICamera.GetKeyDown(keyCode);
-		bool keyUp = UICamera.GetKeyUp(keyCode);
-#endif
 
 		if (keyDown) mPress = true;
 
@@ -177,17 +119,21 @@ public class UIKeyBinding : MonoBehaviour
 		{
 			if (keyDown)
 			{
-				UICamera.currentTouchID = -1;
-				UICamera.currentKey = keyCode;
+				UICamera.currentTouch = UICamera.controller;
+				UICamera.currentScheme = UICamera.ControlScheme.Controller;
+				UICamera.currentTouch.current = gameObject;
 				OnBindingPress(true);
+				UICamera.currentTouch.current = null;
 			}
 
 			if (mPress && keyUp)
 			{
-				UICamera.currentTouchID = -1;
-				UICamera.currentKey = keyCode;
+				UICamera.currentTouch = UICamera.controller;
+				UICamera.currentScheme = UICamera.ControlScheme.Controller;
+				UICamera.currentTouch.current = gameObject;
 				OnBindingPress(false);
 				OnBindingClick();
+				UICamera.currentTouch.current = null;
 			}
 		}
 
@@ -203,10 +149,7 @@ public class UIKeyBinding : MonoBehaviour
 					}
 					mIgnoreUp = false;
 				}
-				else if (mPress)
-				{
-					UICamera.hoveredObject = gameObject;
-				}
+				else if (mPress) UICamera.selectedObject = gameObject;
 			}
 		}
 
@@ -215,64 +158,4 @@ public class UIKeyBinding : MonoBehaviour
 
 	protected virtual void OnBindingPress (bool pressed) { UICamera.Notify(gameObject, "OnPress", pressed); }
 	protected virtual void OnBindingClick () { UICamera.Notify(gameObject, "OnClick", null); }
-
-	/// <summary>
-	/// Convert the key binding to its text format.
-	/// </summary>
-
-	public override string ToString () { return GetString(keyCode, modifier); }
-
-	/// <summary>
-	/// Convert the key binding to its text format.
-	/// </summary>
-
-	static public string GetString (KeyCode keyCode, Modifier modifier)
-	{
-		return (modifier != Modifier.None) ? modifier + "+" + keyCode : keyCode.ToString();
-	}
-
-	/// <summary>
-	/// Given the ToString() text, parse it for key and modifier information.
-	/// </summary>
-
-	static public bool GetKeyCode (string text, out KeyCode key, out Modifier modifier)
-	{
-		key = KeyCode.None;
-		modifier = Modifier.None;
-		if (string.IsNullOrEmpty(text)) return false;
-
-		if (text.Contains("+"))
-		{
-			string[] parts = text.Split('+');
-
-			try
-			{
-				modifier = (Modifier)System.Enum.Parse(typeof(Modifier), parts[0]);
-				key = (KeyCode)System.Enum.Parse(typeof(KeyCode), parts[1]);
-			}
-			catch (System.Exception) { return false; }
-		}
-		else
-		{
-			modifier = Modifier.None;
-			try { key = (KeyCode)System.Enum.Parse(typeof(KeyCode), text); }
-			catch (System.Exception) { return false; }
-		}
-		return true;
-	}
-
-	/// <summary>
-	/// Get the currently active key modifier, if any.
-	/// </summary>
-
-	static public Modifier GetActiveModifier ()
-	{
-		UIKeyBinding.Modifier mod = UIKeyBinding.Modifier.None;
-
-		if (UICamera.GetKey(KeyCode.LeftAlt) || UICamera.GetKey(KeyCode.RightAlt)) mod = UIKeyBinding.Modifier.Alt;
-		else if (UICamera.GetKey(KeyCode.LeftShift) || UICamera.GetKey(KeyCode.RightShift)) mod = UIKeyBinding.Modifier.Shift;
-		else if (UICamera.GetKey(KeyCode.LeftControl) || UICamera.GetKey(KeyCode.RightControl)) mod = UIKeyBinding.Modifier.Control;
-
-		return mod;
-	}
 }

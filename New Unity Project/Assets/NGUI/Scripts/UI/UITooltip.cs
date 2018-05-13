@@ -12,12 +12,11 @@ public class UITooltip : MonoBehaviour
 
 	public Camera uiCamera;
 	public UILabel text;
-	public GameObject tooltipRoot;
 	public UISprite background;
 	public float appearSpeed = 10f;
 	public bool scalingTransitions = true;
 
-	protected GameObject mTooltip;
+	protected GameObject mHover;
 	protected Transform mTrans;
 	protected float mTarget = 0f;
 	protected float mCurrent = 0f;
@@ -54,9 +53,9 @@ public class UITooltip : MonoBehaviour
 
 	protected virtual void Update ()
 	{
-		if (mTooltip != UICamera.tooltipObject)
+		if (mHover != UICamera.hoveredObject)
 		{
-			mTooltip = null;
+			mHover = null;
 			mTarget = 0f;
 		}
 
@@ -104,11 +103,11 @@ public class UITooltip : MonoBehaviour
 		if (text != null && !string.IsNullOrEmpty(tooltipText))
 		{
 			mTarget = 1f;
-			mTooltip = UICamera.tooltipObject;
+			mHover = UICamera.hoveredObject;
 			text.text = tooltipText;
 
 			// Orthographic camera positioning is trivial
-			mPos = UICamera.lastEventPosition;
+			mPos = UICamera.lastTouchPosition;
 
 			Transform textTrans = text.transform;
 			Vector3 offset = textTrans.localPosition;
@@ -154,6 +153,7 @@ public class UITooltip : MonoBehaviour
 				mPos = mTrans.localPosition;
 				mPos.x = Mathf.Round(mPos.x);
 				mPos.y = Mathf.Round(mPos.y);
+				mTrans.localPosition = mPos;
 			}
 			else
 			{
@@ -165,16 +165,10 @@ public class UITooltip : MonoBehaviour
 				mPos.x -= Screen.width * 0.5f;
 				mPos.y -= Screen.height * 0.5f;
 			}
-
-			mTrans.localPosition = mPos;
-
-			// Force-update all anchors below the tooltip
-			if (tooltipRoot != null) tooltipRoot.BroadcastMessage("UpdateAnchors");
-			else text.BroadcastMessage("UpdateAnchors");
 		}
 		else
 		{
-			mTooltip = null;
+			mHover = null;
 			mTarget = 0f;
 		}
 	}
@@ -196,5 +190,5 @@ public class UITooltip : MonoBehaviour
 	/// Hide the tooltip.
 	/// </summary>
 
-	static public void Hide () { if (mInstance != null) { mInstance.mTooltip = null; mInstance.mTarget = 0f; } }
+	static public void Hide () { if (mInstance != null) { mInstance.mHover = null; mInstance.mTarget = 0f; } }
 }

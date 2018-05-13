@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
 
@@ -12,17 +12,11 @@ using UnityEngine;
 public class UI2DSpriteAnimation : MonoBehaviour
 {
 	/// <summary>
-	/// Index of the current frame in the sprite animation.
-	/// </summary>
-
-	public int frameIndex = 0;
-
-	/// <summary>
 	/// How many frames there are in the animation per second.
 	/// </summary>
 
 	[SerializeField] protected int framerate = 20;
-
+	
 	/// <summary>
 	/// Should this animation be affected by time scale?
 	/// </summary>
@@ -43,6 +37,7 @@ public class UI2DSpriteAnimation : MonoBehaviour
 
 	UnityEngine.SpriteRenderer mUnitySprite;
 	UI2DSprite mNguiSprite;
+	int mIndex = 0;
 	float mUpdate = 0f;
 
 	/// <summary>
@@ -67,9 +62,9 @@ public class UI2DSpriteAnimation : MonoBehaviour
 		{
 			if (!enabled && !loop)
 			{
-				int newIndex = framerate > 0 ? frameIndex + 1 : frameIndex - 1;
+				int newIndex = framerate > 0 ? mIndex + 1 : mIndex - 1;
 				if (newIndex < 0 || newIndex >= frames.Length)
-					frameIndex = framerate < 0 ? frames.Length - 1 : 0;
+					mIndex = framerate < 0 ? frames.Length - 1 : 0;
 			}
 			
 			enabled = true;
@@ -89,7 +84,7 @@ public class UI2DSpriteAnimation : MonoBehaviour
 
 	public void ResetToBeginning ()
 	{
-		frameIndex = framerate < 0 ? frames.Length - 1 : 0;
+		mIndex = framerate < 0 ? frames.Length - 1 : 0;
 		UpdateSprite();
 	}
 
@@ -116,7 +111,7 @@ public class UI2DSpriteAnimation : MonoBehaviour
 			if (mUpdate < time)
 			{
 				mUpdate = time;
-				int newIndex = framerate > 0 ? frameIndex + 1 : frameIndex - 1;
+				int newIndex = framerate > 0 ? mIndex + 1 : mIndex - 1;
 
 				if (!loop && (newIndex < 0 || newIndex >= frames.Length))
 				{
@@ -124,7 +119,7 @@ public class UI2DSpriteAnimation : MonoBehaviour
 					return;
 				}
 
-				frameIndex = NGUIMath.RepeatIndex(newIndex, frames.Length);
+				mIndex = NGUIMath.RepeatIndex(newIndex, frames.Length);
 				UpdateSprite();
 			}
 		}
@@ -153,11 +148,11 @@ public class UI2DSpriteAnimation : MonoBehaviour
 
 		if (mUnitySprite != null)
 		{
-			mUnitySprite.sprite = frames[frameIndex];
+			mUnitySprite.sprite = frames[mIndex];
 		}
 		else if (mNguiSprite != null)
 		{
-			mNguiSprite.nextSprite = frames[frameIndex];
+			mNguiSprite.nextSprite = frames[mIndex];
 		}
 	}
 }

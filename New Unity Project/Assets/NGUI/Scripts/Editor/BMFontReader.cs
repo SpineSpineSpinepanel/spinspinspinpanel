@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
 using UnityEditor;
@@ -12,7 +12,7 @@ using System.Text;
 /// This functionality is not a part of BMFont anymore because Flash export option can't handle System.IO functions.
 /// </summary>
 
-static public class BMFontReader
+public static class BMFontReader
 {
 	/// <summary>
 	/// Helper function that retrieves the string value of the key=value pair.

@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
 using System.Collections.Generic;
@@ -47,11 +47,10 @@ public class UIProgressBar : UIWidgetContainer
 	[HideInInspector][SerializeField] protected float mValue = 1f;
 	[HideInInspector][SerializeField] protected FillDirection mFill = FillDirection.LeftToRight;
 
-	[System.NonSerialized] protected bool mStarted = false;
-	[System.NonSerialized] protected Transform mTrans;
-	[System.NonSerialized] protected bool mIsDirty = false;
-	[System.NonSerialized] protected Camera mCam;
-	[System.NonSerialized] protected float mOffset = 0f;
+	protected Transform mTrans;
+	protected bool mIsDirty = false;
+	protected Camera mCam;
+	protected float mOffset = 0f;
 
 	/// <summary>
 	/// Number of steps the slider should be divided into. For example 5 means possible values of 0, 0.25, 0.5, 0.75, and 1.0.
@@ -104,7 +103,7 @@ public class UIProgressBar : UIWidgetContainer
 			if (mFill != value)
 			{
 				mFill = value;
-				if (mStarted) ForceUpdate();
+				ForceUpdate();
 			}
 		}
 	}
@@ -120,7 +119,32 @@ public class UIProgressBar : UIWidgetContainer
 			if (numberOfSteps > 1) return Mathf.Round(mValue * (numberOfSteps - 1)) / (numberOfSteps - 1);
 			return mValue;
 		}
-		set { Set(value); }
+		set
+		{
+			float val = Mathf.Clamp01(value);
+
+			if (mValue != val)
+			{
+				float before = this.value;
+				mValue = val;
+
+				if (before != this.value)
+				{
+					ForceUpdate();
+
+					if (current == null && NGUITools.GetActive(this) && EventDelegate.IsValid(onChange))
+					{
+						current = this;
+						EventDelegate.Execute(onChange);
+						current = null;
+					}
+				}
+#if UNITY_EDITOR
+				if (!Application.isPlaying)
+					NGUITools.SetDirty(this);
+#endif
+			}
+		}
 	}
 
 	/// <summary>
@@ -137,7 +161,7 @@ public class UIProgressBar : UIWidgetContainer
 		}
 		set
 		{
-#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6 || UNITY_4_7
+#if UNITY_4_3 || UNITY_4_5 || UNITY_4_6
 			if (mFG != null)
 			{
 				mFG.alpha = value;
@@ -206,44 +230,11 @@ public class UIProgressBar : UIWidgetContainer
 	protected bool isInverted { get { return (mFill == FillDirection.RightToLeft || mFill == FillDirection.TopToBottom); } }
 
 	/// <summary>
-	/// Set the progress bar's value. If setting the initial value, call Start() first.
-	/// </summary>
-
-	public void Set (float val, bool notify = true)
-	{
-		val = Mathf.Clamp01(val);
-
-		if (mValue != val)
-		{
-			float before = value;
-			mValue = val;
-
-			if (mStarted && before != value)
-			{
-				if (notify && NGUITools.GetActive(this) && EventDelegate.IsValid(onChange))
-				{
-					current = this;
-					EventDelegate.Execute(onChange);
-					current = null;
-				}
-
-				ForceUpdate();
-			}
-#if UNITY_EDITOR
-			if (!Application.isPlaying)
-				NGUITools.SetDirty(this);
-#endif
-		}
-	}
-
-	/// <summary>
 	/// Register the event listeners.
 	/// </summary>
 
-	public void Start ()
+	protected void Start ()
 	{
-		if (mStarted) return;
-		mStarted = true;
 		Upgrade();
 
 		if (Application.isPlaying)
@@ -301,7 +292,7 @@ public class UIProgressBar : UIWidgetContainer
 			float val = Mathf.Clamp01(mValue);
 			if (mValue != val) mValue = val;
 			if (numberOfSteps < 0) numberOfSteps = 0;
-			else if (numberOfSteps > 21) numberOfSteps = 21;
+			else if (numberOfSteps > 20) numberOfSteps = 20;
 			ForceUpdate();
 		}
 		else
@@ -309,7 +300,7 @@ public class UIProgressBar : UIWidgetContainer
 			float val = Mathf.Clamp01(mValue);
 			if (mValue != val) mValue = val;
 			if (numberOfSteps < 0) numberOfSteps = 0;
-			else if (numberOfSteps > 21) numberOfSteps = 21;
+			else if (numberOfSteps > 20) numberOfSteps = 20;
 		}
 	}
 
@@ -466,47 +457,5 @@ public class UIProgressBar : UIWidgetContainer
 		}
 		else if (Vector3.Distance(thumb.position, worldPos) > 0.00001f)
 			thumb.position = worldPos;
-	}
-
-	/// <summary>
-	/// Watch for key events and adjust the value accordingly.
-	/// </summary>
-
-	public virtual void OnPan (Vector2 delta)
-	{
-		if (enabled)
-		{
-			switch (mFill)
-			{
-				case FillDirection.LeftToRight:
-				{
-					float after = Mathf.Clamp01(mValue + delta.x);
-					value = after;
-					mValue = after;
-					break;
-				}
-				case FillDirection.RightToLeft:
-				{
-					float after = Mathf.Clamp01(mValue - delta.x);
-					value = after;
-					mValue = after;
-					break;
-				}
-				case FillDirection.BottomToTop:
-				{
-					float after = Mathf.Clamp01(mValue + delta.y);
-					value = after;
-					mValue = after;
-					break;
-				}
-				case FillDirection.TopToBottom:
-				{
-					float after = Mathf.Clamp01(mValue - delta.y);
-					value = after;
-					mValue = after;
-					break;
-				}
-			}
-		}
 	}
 }

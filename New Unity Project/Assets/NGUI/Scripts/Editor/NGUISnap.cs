@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 using UnityEngine;
 
@@ -9,7 +9,7 @@ using UnityEngine;
 /// Utility class that makes it easy to perform snapping while dragging widgets.
 /// </summary>
 
-static public class NGUISnap
+public static class NGUISnap
 {
 	const float SNAP_THRESHOLD = 10f;
 

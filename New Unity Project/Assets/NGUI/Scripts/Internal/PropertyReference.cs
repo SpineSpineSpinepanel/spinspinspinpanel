@@ -1,7 +1,7 @@
-//-------------------------------------------------
+//----------------------------------------------
 //            NGUI: Next-Gen UI kit
-// Copyright © 2011-2017 Tasharen Entertainment Inc
-//-------------------------------------------------
+// Copyright © 2011-2015 Tasharen Entertainment
+//----------------------------------------------
 
 #if UNITY_EDITOR || !UNITY_FLASH
 #define REFLECTION_SUPPORT
@@ -407,10 +407,6 @@ public class PropertyReference
 				value = Mathf.RoundToInt((float)value);
 				return true;
 			}
-			else if (from == typeof(double))
-			{
-				value = (int)Math.Round((double)value);
-			}
 		}
 		else if (to == typeof(float))
 		{
@@ -423,35 +419,6 @@ public class PropertyReference
 					value = val;
 					return true;
 				}
-			}
-			else if (from == typeof(double))
-			{
-				value = (float)(double)value;
-			}
-			else if (from == typeof(int))
-			{
-				value = (float)(int)value;
-			}
-		}
-		else if (to == typeof(double))
-		{
-			if (from == typeof(string))
-			{
-				double val;
-
-				if (double.TryParse((string)value, out val))
-				{
-					value = val;
-					return true;
-				}
-			}
-			else if (from == typeof(float))
-			{
-				value = (double)(float)value;
-			}
-			else if (from == typeof(int))
-			{
-				value = (double)(int)value;
 			}
 		}
 		return false;

@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
     private void StartNextPattern()
     {
         BulletPattenManager.GetInstance().CreateNewPattern();
-        LevelCnt = 0;
+        LevelCnt = 1;
     }
 
     public void SetLevelProgeress()
