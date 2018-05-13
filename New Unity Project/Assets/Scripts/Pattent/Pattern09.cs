@@ -15,53 +15,79 @@ public class PATTERN09INFO
 
 public class Pattern09 : IPattern
 {
-    private PATTERN09INFO info = null;
+    private List<Tweener> _tweener = new List<Tweener>();
 
-    private int _rotateCount;
+    private List<PATTERN09INFO> infolist = new List<PATTERN09INFO>();
+
+    private int _waveCount;
     private float _animationTime;
     private float _bulletAnimationTime;
     private float _animationAngle;
 
-    private List<Tweener> _tweener = new List<Tweener>();
+    private AnimationCurve _animationCurve = null;
 
-    public Pattern09( float _animationTime, float _bulletAnimationTime, float _animationAngle)
+
+    public Pattern09(int _waveCount, float _animationTime, float _bulletAnimationTime, float _animationAngle, AnimationCurve _animationCurve)
     {
-        //this._rotateCount = _rotateCount;
+        this._waveCount = _waveCount;
         this._animationTime = _animationTime;
         this._bulletAnimationTime = _bulletAnimationTime;
         this._animationAngle = _animationAngle;
+        this._animationCurve = _animationCurve;
     }
 
     public void OnStart()
     {
-        setPatten1Info();
+        setPatten1Info(_waveCount);
 
-        //for (int i = 0; i < info.Count; ++i)
+        //for (int i = 0; i < infolist.Count; ++i)
         //{
-            setTweenAngle();
+        //    setTweenAngle(i);
         //}
     }
 
+    int _direction = 1;
     public void OnUpdate(float deletaTime)
     {
-        info.CreateTimeCount += deletaTime;
-        if (info.CreateTimeCount >= info.CreateTime)
+        bool bulletActivat = false;
+
+        for (int i = 0; i < infolist.Count; ++i)
         {
-            BasicBullet temp = BulletManager.GetInstance().GetBullet();
+            infolist[i].CreateTimeCount += deletaTime;
+            if (infolist[i].CreateTimeCount >= infolist[i].CreateTime)
+            {
+                setTweenAngle(i);
 
-            temp.OnActive(info.TweenAngle, 730f, _bulletAnimationTime);
+                BasicBullet temp = BulletManager.GetInstance().GetBullet();
 
-            info.listMyBullet.Add(temp);
-            info.CreateTimeCount = 0f;
+                temp.OnActive(infolist[i].TweenAngle, 730f, _bulletAnimationTime);
+
+                infolist[i].listMyBullet.Add(temp);
+                infolist[i].CreateTimeCount = 0f;
+
+                bulletActivat = true;
+            }
+            
+            for (int j = 0; j < infolist[i].listMyBullet.Count; ++j)
+            {
+                infolist[i].listMyBullet[j].SetBulletAngleInfo(infolist[i].TweenAngle);
+            }
         }
+
+        if (bulletActivat)
+            _direction *= -1;
     }
 
     public void OnEnd()
     {
+
     }
 
     public bool IsTweening()
     {
+        if (_tweener.Count <= 0)
+            return true;
+
         for (int i = 0; i < _tweener.Count; ++i)
         {
             if (_tweener[i].IsPlaying())
@@ -70,16 +96,26 @@ public class Pattern09 : IPattern
         return false;
     }
 
-    void setTweenAngle()
+    void setTweenAngle(int index)
     {
-        _tweener.Add(DOTween.To(() => info.TweenAngle, x => info.TweenAngle = x, info.TweenAngle + _animationAngle, _animationTime).SetEase(Ease.Linear));
+        int direction = _direction;
+
+        _tweener.Add(DOTween.To(() => infolist[index].TweenAngle, x => infolist[index].TweenAngle = x, infolist[index].TweenAngle + (_animationAngle * _direction), _animationTime).SetEase(_animationCurve).OnComplete(() =>
+              {
+                  infolist.Clear();
+              }));
     }
 
-    void setPatten1Info()
+    void setPatten1Info(int BulletWaveCount)
     {
-        PATTERN09INFO info = new PATTERN09INFO();
+        float WaveStartAngle = 360f / BulletWaveCount;
+        for (int i = 0; i < BulletWaveCount; ++i)
+        {
+            PATTERN09INFO info = new PATTERN09INFO();
 
-        info.TweenAngle = 0;
-        info.CreateTime = 0.1f;
+            info.TweenAngle = WaveStartAngle * (i + 1);
+            info.CreateTime = 0.5f;
+            infolist.Add(info);
+        }
     }
 }
