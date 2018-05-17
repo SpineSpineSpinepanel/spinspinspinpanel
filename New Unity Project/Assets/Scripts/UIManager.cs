@@ -2,16 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 //using GooglePlayGames;
 
 public class UIManager : MonoBehaviour
 {
+    private static UIManager instance;
+    public static UIManager GetInstance()
+    {
+        if (!instance)
+        {
+            instance = GameObject.FindObjectOfType(typeof(UIManager)) as UIManager;
+            if (!instance)
+                Debug.LogError("There needs to be one active MyClass script on a GameObject in your scene.");
+        }
+
+        return instance;
+    }
+
     public GameObject objTitle = null;
     public GameObject objButton = null;
     public GameObject objSettingBg;
+    public GameObject objDieBg;
     public UILabel lbTimer = null;
     public AudioSource source;
     public Camera camera;
+
+    public UISprite sprDieBg;
 
     public AnimationCurve curve_MainUIAnim = null;
 
@@ -32,6 +49,20 @@ public class UIManager : MonoBehaviour
 #if UNITY_ANDRIOD
         
 #endif
+    }
+
+    public void OnDie()
+    {
+        objDieBg.SetActive(true);
+        sprDieBg.alpha = 0f;
+        sprDieBg.transform.localScale = new Vector3(0.7f, 0.7f, 1f);
+        DOTween.ToAlpha(() => sprDieBg.color, x => sprDieBg.color = x, 1f, 2f);
+        sprDieBg.transform.DOScale(1f, 2f);
+    }
+
+    public void ClickReSet()
+    {
+        SceneManager.LoadScene(0);
     }
 
     //public void ClickRankBtn()

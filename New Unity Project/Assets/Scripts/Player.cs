@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
             particle_Die.gameObject.transform.localPosition = transform.localPosition;
             particle_Die.Play();
             GameManager.GetInstance().IsDie = true;
+            UIManager.GetInstance().OnDie();
         }
     }
 }
