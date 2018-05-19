@@ -7,6 +7,7 @@ using DG.Tweening;
 class PATTERN10INFO
 {
     public float TweenAngle = 0f;
+    public float TweenAngleReverse = 0f;
     public float CreateTime = 0.1f;
     public float CreateTimeCount = 0f;
 
@@ -22,7 +23,6 @@ public class Pattern10 : IPattern
 
     private List<Tweener> _tweener = new List<Tweener>();
     private List<PATTERN10INFO> _infoList = new List<PATTERN10INFO>();
-    private List<PATTERN10INFO> _infoListReverse = new List<PATTERN10INFO>();
 
     public Pattern10(int waveCount, float animationTime, float bulletTime, float animationAngle)
     {
@@ -65,10 +65,10 @@ public class Pattern10 : IPattern
 
             for (int j = 0; j < _infoList[i].listMyBullet.Count; ++j)
             {
-                if (_direction > 0)
+                if (j % 2 == 0)
                     _infoList[i].listMyBullet[j].SetBulletAngleInfo(_infoList[i].TweenAngle);
                 else
-                    _infoList[i].listMyBullet[j].SetBulletAngleInfo(_infoListReverse[i].TweenAngle);
+                    _infoList[i].listMyBullet[j].SetBulletAngleInfo(_infoList[i].TweenAngleReverse);
             }
         }
 
@@ -100,9 +100,9 @@ public class Pattern10 : IPattern
                 _infoList.Clear();
             }));
 
-        _tweener.Add(DOTween.To(() => _infoListReverse[index].TweenAngle, x => _infoListReverse[index].TweenAngle = x, _infoListReverse[index].TweenAngle - _animationAngle, _animationTime).OnComplete(() =>
+        _tweener.Add(DOTween.To(() => _infoList[index].TweenAngleReverse, x => _infoList[index].TweenAngleReverse = x, _infoList[index].TweenAngleReverse - _animationAngle, _animationTime).OnComplete(() =>
         {
-            _infoListReverse.Clear();
+            _infoList.Clear();
         }));
     }
 
@@ -113,10 +113,10 @@ public class Pattern10 : IPattern
         {
             PATTERN10INFO info = new PATTERN10INFO();
             info.TweenAngle = startAngle * (i + 1);
+            info.TweenAngleReverse = startAngle * (i + 1);
             info.CreateTime = 0.2f;
 
             _infoList.Add(info);
-            _infoListReverse.Add(info);
         }
     }
 }

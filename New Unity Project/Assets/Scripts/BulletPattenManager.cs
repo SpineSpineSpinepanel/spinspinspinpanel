@@ -170,7 +170,7 @@ public class BulletPattenManager : MonoBehaviour
         }
         if(pattern == 10)
         {
-            IPattern patten = new Pattern10(20, 10f, 1.5f, 360);
+            IPattern patten = new Pattern10(10, 30f, 1.5f, 360);
             patten.OnStart();
             CurPattern = patten;
             GameManager.GetInstance().InitPatternStart(11.5f);
