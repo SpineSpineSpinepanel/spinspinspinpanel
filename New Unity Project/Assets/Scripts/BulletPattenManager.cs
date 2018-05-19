@@ -71,7 +71,7 @@ public class BulletPattenManager : MonoBehaviour
                     GameManager.GetInstance().StartNextLevel();
                     return;
                 }
-                int Pattern = 10;//Random.Range(0, 10);
+                int Pattern = Random.Range(0, 10);
 
                 while (Pattern == _prvePattern)
                 {
