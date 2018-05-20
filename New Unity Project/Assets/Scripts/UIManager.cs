@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
-//using GooglePlayGames;
+using GooglePlayGames;
 
 public class UIManager : MonoBehaviour
 {
@@ -65,42 +65,42 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    //public void ClickRankBtn()
-    //{
-    //    // 로그인이 되어 있지 않으면 로그인하고 보여주기
-    //    if(Social.localUser.authenticated == false)
-    //    {
-    //        Social.localUser.Authenticate((bool success) =>
-    //        {
-    //            if(success)
-    //            {
-    //                Social.ShowAchievementsUI();
-    //                return;
-    //            }
-    //            else
-    //            {
-    //                return;
-    //            }
-    //        });
-    //    }
+    public void ClickRankBtn()
+    {
+        // 로그인이 되어 있지 않으면 로그인하고 보여주기
+        if(Social.localUser.authenticated == false)
+        {
+            Social.localUser.Authenticate((bool success) =>
+            {
+                if(success)
+                {
+                    Social.ShowAchievementsUI();
+                    return;
+                }
+                else
+                {
+                    return;
+                }
+            });
+        }
 
-    //    Social.ShowAchievementsUI();
-    //}
+        Social.ShowAchievementsUI();
+    }
 
-    //public void ReportScroe(int Score)
-    //{
-    //    PlayGamesPlatform.Instance.ReportScore(Score, GPGSIds.leaderboard_cp, (bool success) =>
-    //      {
-    //          if(success)
-    //          {
-    //              Debug.Log("success");
-    //          }
-    //          else
-    //          {
-    //              Debug.Log("Fail");
-    //          }
-    //      });
-    //}
+    public void ReportScroe(int Score)
+    {
+        PlayGamesPlatform.Instance.ReportScore(Score, GPGSIds.leaderboard_cp, (bool success) =>
+          {
+              if(success)
+              {
+                  Debug.Log("success");
+              }
+              else
+              {
+                  Debug.Log("Fail");
+              }
+          });
+    }
 
     private void Update()
     {
