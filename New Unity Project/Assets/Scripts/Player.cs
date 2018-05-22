@@ -48,6 +48,17 @@ public class Player : MonoBehaviour
             Angle -= Speed * Time.deltaTime;
         }
 
+        if(Input.GetMouseButton(0))
+        {
+            Vector3 mousePoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+
+            if (mousePoint.x < 0)
+                Angle += Speed * Time.deltaTime;
+
+            else if(mousePoint.x > 0)
+                Angle -= Speed * Time.deltaTime;
+        }
+
         Vector3 vPos = Vector3.zero;
 
         vPos.x = 0f + (Radius * (float)Mathf.Cos(Angle * Mathf.PI));
