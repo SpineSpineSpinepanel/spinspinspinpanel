@@ -52,10 +52,10 @@ public class Player : MonoBehaviour
         {
             Vector3 mousePoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
 
-            if (mousePoint.x < 0)
+            if (mousePoint.x < 0.5f)
                 Angle += Speed * Time.deltaTime;
 
-            else if(mousePoint.x > 0)
+            else if(mousePoint.x > 0.5f)
                 Angle -= Speed * Time.deltaTime;
         }
 
