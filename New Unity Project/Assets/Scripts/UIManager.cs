@@ -67,14 +67,18 @@ public class UIManager : MonoBehaviour
 
     public void ClickRankBtn()
     {
+        PlayGamesPlatform.Activate();
+
         // 로그인이 되어 있지 않으면 로그인하고 보여주기
-        if(Social.localUser.authenticated == false)
+        if (Social.localUser.authenticated == false)
         {
             Social.localUser.Authenticate((bool success) =>
             {
                 if(success)
                 {
-                    Social.ShowAchievementsUI();
+                    //Social.ShowAchievementsUI();
+                    ReportScroe(1); // for Test.
+                    Social.ShowLeaderboardUI();
                     return;
                 }
                 else
@@ -84,7 +88,8 @@ public class UIManager : MonoBehaviour
             });
         }
 
-        Social.ShowAchievementsUI();
+        //Social.ShowAchievementsUI();
+        Social.ShowLeaderboardUI();
     }
 
     public void ReportScroe(int Score)
